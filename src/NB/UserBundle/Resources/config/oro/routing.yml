@@ -1,0 +1,4 @@
+nb_user_bundle:
+  resource: "@NBUserBundle/Controller"
+  type: annotation
+  prefix: /entity

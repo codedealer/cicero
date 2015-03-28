@@ -1,0 +1,6 @@
+services:
+  nb_user.form.type.worktype:
+    class: NB\UserBundle\Form\Type\WorkTypeFormType
+    arguments: [ @doctrine.orm.entity_manager ]
+    tags:
+      - { name: form.type, alias: 'nb_work_type'}

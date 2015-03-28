@@ -1,0 +1,95 @@
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+{% form_theme form with 'OroFormBundle:Form:fields.html.twig' %}
+
+{% set entityName = entity.id
+    ? 'oro.entity.item'|trans({'%id%': entity.id})
+    : 'oro.ui.create_entity'|trans({'%entityName%': entity_config.get('label')|trans})
+%}
+{% oro_title_set({params : {"%entityName%": entityName} }) %}
+
+{% set formAction = path('oro_entity_update', {entityName: entity_name, id: entity.id}) %}
+
+{% set audit_entity_class = entity_config.getId.getClassName|replace('\\', '_') %}
+{% set audit_entity_id = entity.id %}
+{% set audit_title  = (entity_config.get('label')|trans)|default('N/A') %}
+
+{% block navButtons %}
+    {{ UI.cancelButton(path('oro_entity_index', {entityName: entity_name})) }}
+    {% if resource_granted('EDIT', 'entity:'~entity_class) %}
+        {% set html = UI.saveAndCloseButton() %}
+        {% set html = html ~ UI.saveAndStayButton() %}
+        {{ UI.dropdownSaveButton({'html': html}) }}
+    {% endif %}
+{% endblock navButtons %}
+
+{% block pageHeader %}
+    {% set breadcrumbs = {
+        'entity':      'entity',
+        'indexPath':   path('oro_entityconfig_index'),
+        'indexLabel': 'oro.entity.plural_label'|trans,
+        'entityTitle': entityName,
+        'additional': [
+            {
+                'indexPath'  : path('oro_entity_index', {entityName: entity_name}),
+                'indexLabel' : (entity_config.get('label')|trans)|default('N/A')
+            },
+        ]
+    } %}
+
+    {{ parent() }}
+{% endblock pageHeader %}
+
+{% block stats %}
+    {{ parent() }}
+{% endblock stats %}
+
+{% block content_data %}
+<div class="clearfix">
+    <div class="container-fluid scrollable-container form-container">
+        <div class="responsive-section responsive-section-no-blocks">
+            <div class="row-fluid">
+                <fieldset class="form-horizontal">
+                    <div class="responsive-cell responsive-cell-no-blocks">
+
+                            {{ form_errors(form) }}
+
+                            {{ form_row(form.name, {'label': 'Название работы'}) }}
+                            {{ form_row(form.isHourly, { 'attr': { 'class': 'hide'} }) }}
+                            {% set ishourly = form.isHourly.vars.data %}
+                            <div class="control-group" id="rate-toggler">
+                                <div class="controls btn-group">
+                                <button class="btn btn-default {{ ishourly ? 'active' }}" type="button" data-toggle="tab" data-target="#hourly-form">Почасовая ставка</button>
+                                <button class="btn btn-default {{ ishourly ? '' : 'active' }}" type="button" data-toggle="tab" data-target="#flat-form">Фиксированная ставка</button>
+                            </div>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-pane fade {{ ishourly ? '' : 'active in' }}" id="flat-form">
+                                    {{ form_row(form.flatrate, {'label': 'Ставка'}) }}
+                                </div>
+                                <div class="tab-pane fade {{ ishourly ? 'active in' }}" id="hourly-form">
+                                    {% do form.workrates.setRendered %}
+                                    
+                                    {{ form_rest(form) }}
+                                </div>
+                            </div>
+                            
+                            
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+require(['jquery'],function($){
+    $('#rate-toggler .btn').click(function(e){
+        if($(this).hasClass('active'))
+            return;
+
+        var $checkbox = $('#nb_work_type_isHourly');
+        $checkbox.prop('checked', function(i, val){ return !val; });
+        $(this).addClass('active').siblings().removeClass('active');
+    });
+});
+</script>
+{% endblock content_data %}
