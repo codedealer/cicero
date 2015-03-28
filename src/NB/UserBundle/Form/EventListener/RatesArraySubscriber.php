@@ -10,21 +10,23 @@ use Doctrine\ORM\EntityManager;
 
 class RatesArraySubscriber implements EventSubscriberInterface
 {
-	private $em;
+	private $em, $logger;
 
-	public function __construct(EntityManager $em){
+	public function __construct(EntityManager $em, $logger){
 		$this->em = $em;
+		$this->logger = $logger;
 	}
 
 	public static function getSubscribedEvents(){
 		return [
 			FormEvents::PRE_SET_DATA => 'preSetData',
-			FormEvents::PRE_SUBMIT => 'postSubmit'
+			FormEvents::POST_SUBMIT => 'postSubmit'
 			 ];
 	}
 
 	public function preSetData(FormEvent $event){
 		//getData
+		
 		$form = $event->getForm();
 		$entityClass = '\Extend\Entity\titles';
 		$repo = $this->em->getRepository($entityClass);
@@ -44,12 +46,16 @@ class RatesArraySubscriber implements EventSubscriberInterface
 		$form = $event->getForm();
 		$worktype = $event->getData();
 
-		if($form->get('isHourly')->getData() === true){
+		if($worktype->getIsHourly() === true){
+
+			//$this->logger->notice('Gotta create workrates n shit');
+			//$this->logger->notice('Unmapped field : ' . (string) $form->get('title1')->getName());
+			/*
 			$entityClass = '\Extend\Entity\titles';
 			$repo = $this->em->getRepository($entityClass);
 			$titleIds = $this->getTitleIds($form);
-			$worktypeId = $worktype->getId();
 			$wagerates = [];
+
 			foreach ($titleIds as $titleId) {
 				$wagerate = new wagerate();
 				$title = $repo->find($titleId);
@@ -61,21 +67,22 @@ class RatesArraySubscriber implements EventSubscriberInterface
 				$this->em->persist($wagerate);
 
 				$wagerates[] = $wagerate;
-				$form->remove($key);
+				//$form->remove($key);
 			}
 			if(count($wagerates)){
+				$this->logger->notice('saving wagerates array');
 				$this->em->flush();
-				$workrates = $form->get('workrates')->getData();
+			
 				foreach ($wagerates as $key => $value) {
-					$workrates->add($value);
+					$worktype->addWorkrates($value);
 				}
-			}
+			}*/
 		}
 		else{
 			$titleIds = $this->getTitleIds($form);
 			foreach ($titleIds as $titleId) {
 				$key = 'title' . (string) $titleId;
-				$form->remove($key);
+				//$form->remove($key);
 			}
 		}
 	}
