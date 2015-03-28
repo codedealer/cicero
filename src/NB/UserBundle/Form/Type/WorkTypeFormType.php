@@ -28,19 +28,6 @@ class WorkTypeFormType extends AbstractType
 			->add('workrates', 'collection', ['allow_add' => true])
 			;
 		$builder->addEventSubscriber(new RatesArraySubscriber($this->em));
-		
-		$entityClass = '\Extend\Entity\titles';
-		$repo = $this->em->getRepository($entityClass);
-		$titles = $repo->findAll();
-
-		foreach ($titles as $key => $title) {
-			$builder->add('title' . (string) $title->getId(), 'money', [
-				'label' => $title->getName(), 
-				'currency' => 'RUB', 
-				'mapped' => false,
-				'required' => false
-				]);
-		}
 	}
 }
 ?>

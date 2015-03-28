@@ -60,7 +60,7 @@ class EntitiesController extends Controller
 
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
-            
+            var_dump($form);
             if ($form->isValid()) {
                 $em->persist($record);
                 $em->flush();

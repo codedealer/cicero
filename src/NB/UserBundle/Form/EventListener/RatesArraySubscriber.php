@@ -19,13 +19,13 @@ class RatesArraySubscriber implements EventSubscriberInterface
 	public static function getSubscribedEvents(){
 		return [
 			FormEvents::PRE_SET_DATA => 'preSetData',
-			//FormEvents::PRE_SUBMIT => 'postSubmit'
+			FormEvents::PRE_SUBMIT => 'postSubmit'
 			 ];
 	}
 
 	public function preSetData(FormEvent $event){
 		//getData
-		$form = $event->getForm();/*
+		$form = $event->getForm();
 		$entityClass = '\Extend\Entity\titles';
 		$repo = $this->em->getRepository($entityClass);
 		$titles = $repo->findAll();
@@ -37,7 +37,7 @@ class RatesArraySubscriber implements EventSubscriberInterface
 				'mapped' => false,
 				'required' => false
 				]);
-		}*/
+		}
 	}
 
 	public function postSubmit(FormEvent $event){
