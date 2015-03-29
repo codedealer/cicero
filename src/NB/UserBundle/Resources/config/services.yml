@@ -4,3 +4,5 @@ services:
     arguments: [ @doctrine.orm.entity_manager, @logger ]
     tags:
       - { name: form.type, alias: 'nb_work_type'}
+  nb.entity_action_mapper:
+    class: NB\UserBundle\RouteHelper\EntityActionMapper
