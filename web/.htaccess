@@ -1,3 +1,5 @@
+SetEnv ORO_PHP_PATH /Applications/MAMP/bin/php/php5.5.3/bin/php
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 

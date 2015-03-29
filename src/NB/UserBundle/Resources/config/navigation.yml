@@ -1,0 +1,21 @@
+oro_menu_config:
+  items:
+    titles_managment:
+      label: 'Должности'
+      route: 'oro_entity_index'
+      routeParameters:
+        entityName: 'Extend_Entity_titles'
+    worktype_management:
+      label: 'Типы работ и ставки'
+      route: 'oro_entity_index'
+      routeParameters:
+        entityName: 'Extend_Entity_worktype'
+  tree:
+    application_menu:
+      children:
+        system_tab:
+          children:
+            users_management:
+              children:
+                titles_managment: ~
+                worktype_management: ~
