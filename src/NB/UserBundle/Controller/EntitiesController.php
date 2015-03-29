@@ -11,6 +11,8 @@ use Oro\Bundle\EntityBundle\Controller\EntitiesController as Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+use \Extend\Entity\wagerate;
+
 class EntitiesController extends Controller
 {
     protected function checkAccess($permission, $entityName)
@@ -19,6 +21,27 @@ class EntitiesController extends Controller
     	$isGranted = $securityFacade->isGranted($permission, 'entity: ' . $entityName);
     	if(!$isGranted)
     		throw new AccessDeniedException('Доступ запрещен.');
+    }
+
+    private function getTitleIds($form){
+        $tids = [];
+        foreach ($form->all() as $key => $field) {
+            if(strpos($field->getName(), 'title') !== false)
+                $tids[] = (int) ltrim($field->getName(),'title');
+        }
+
+        return $tids;
+    }
+
+    private function getExistingTitleIds($data){
+        if(!$data->getWorkrates()) return [];
+        $titles = [];
+        $collection = $data->getWorkrates();
+        $collectionKeys = $collection->getKeys();
+        foreach ($collectionKeys as $workrateKey) {
+            $titles[$collection->get($workrateKey)->getTitles()->getId()] = $workrateKey;
+        }
+        return $titles;
     }
 
     /**
@@ -62,6 +85,44 @@ class EntitiesController extends Controller
             $form->submit($request);
             
             if ($form->isValid()) {
+                
+                if($record->getIsHourly() === true){
+                    $entityClass = '\Extend\Entity\titles';
+                    $repo = $em->getRepository($entityClass);
+                    $titleIds = $this->getTitleIds($form);
+                    $existingTitleIds = $this->getExistingTitleIds($record);
+                    $wagerates = [];
+
+                    foreach ($titleIds as $titleId) {
+                        $key = 'title' . (string) $titleId;
+
+                        if(array_key_exists($titleId, $existingTitleIds)){
+                            $record->getWorkrates()
+                                   ->get($existingTitleIds[$titleId])
+                                   ->setRate($form->get($key)->getData())
+                                   ;
+                        }
+                        else{
+                            $wagerate = new wagerate();
+                            $title = $repo->find($titleId);
+                            $wagerate->setTitles($title)->setRate(
+                                $form->get($key)->getData()
+                                );
+                            $em->persist($wagerate);
+
+                            $wagerates[] = $wagerate;
+                        }
+                    }
+                    if(count($wagerates)){
+                        
+                        $em->flush();
+                    
+                        foreach ($wagerates as $key => $value) {
+                            $record->addWorkrates($value);
+                        }
+                    }
+                }
+                
                 $em->persist($record);
                 $em->flush();
 

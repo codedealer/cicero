@@ -20,12 +20,15 @@ class RatesArraySubscriber implements EventSubscriberInterface
 	public static function getSubscribedEvents(){
 		return [
 			FormEvents::PRE_SET_DATA => 'preSetData',
-			FormEvents::POST_SUBMIT => 'postSubmit'
+			
 			 ];
 	}
 
 	public function preSetData(FormEvent $event){
-		//getData
+		$data = $event->getData();
+		$existingTitles = array();
+		if($data instanceof \Extend\Entity\worktype)
+			$existingTitles = $this->getTitles($data);
 		
 		$form = $event->getForm();
 		$entityClass = '\Extend\Entity\titles';
@@ -37,64 +40,20 @@ class RatesArraySubscriber implements EventSubscriberInterface
 				'label' => $title->getName(), 
 				'currency' => 'RUB', 
 				'mapped' => false,
-				'required' => false
+				'required' => false,
+				'data' => array_key_exists($title->getId(), $existingTitles)
+							? $existingTitles[$title->getId()]
+							: 0
 				]);
 		}
 	}
 
-	public function postSubmit(FormEvent $event){
-		$form = $event->getForm();
-		$worktype = $event->getData();
-
-		if($worktype->getIsHourly() === true){
-
-			//$this->logger->notice('Gotta create workrates n shit');
-			//$this->logger->notice('Unmapped field : ' . (string) $form->get('title1')->getName());
-			/*
-			$entityClass = '\Extend\Entity\titles';
-			$repo = $this->em->getRepository($entityClass);
-			$titleIds = $this->getTitleIds($form);
-			$wagerates = [];
-
-			foreach ($titleIds as $titleId) {
-				$wagerate = new wagerate();
-				$title = $repo->find($titleId);
-				$key = 'title' . (string) $titleId;
-				$wagerate->setTitles($title)->setRate(
-					$form->get($key)->getData()
-					);
-
-				$this->em->persist($wagerate);
-
-				$wagerates[] = $wagerate;
-				//$form->remove($key);
-			}
-			if(count($wagerates)){
-				$this->logger->notice('saving wagerates array');
-				$this->em->flush();
-			
-				foreach ($wagerates as $key => $value) {
-					$worktype->addWorkrates($value);
-				}
-			}*/
+	private function getTitles($data){
+		$titles = [];
+		foreach ($data->getWorkrates() as $key => $workrate) {
+			$titles[$workrate->getTitles()->getId()] = $workrate->getRate();
 		}
-		else{
-			$titleIds = $this->getTitleIds($form);
-			foreach ($titleIds as $titleId) {
-				$key = 'title' . (string) $titleId;
-				//$form->remove($key);
-			}
-		}
-	}
-
-	private function getTitleIds($form){
-		$tids = [];
-		foreach ($form->all() as $key => $field) {
-			if(strpos($field->getName(), 'title') !== false)
-				$tids[] = (int) ltrim($field->getName(),'title');
-		}
-
-		return $tids;
+		return $titles;
 	}
 }
 ?>

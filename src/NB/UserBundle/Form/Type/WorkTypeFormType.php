@@ -26,7 +26,7 @@ class WorkTypeFormType extends AbstractType
 			->add('name', 'text', ['required' => true])
 			->add('isHourly', 'checkbox', ['required' => false])
 			->add('flatrate', 'money', ['required' => false, 'currency' => 'RUB'])
-			->add('workrates', 'collection', ['allow_add' => true, ])//'data_class' => 'Extend\Entity\wagerate'])
+			//->add('workrates', 'collection', ['allow_add' => true, ])//'data_class' => 'Extend\Entity\wagerate'])
 			;
 		$builder->addEventSubscriber(new RatesArraySubscriber($this->em, $this->logger));
 	}
