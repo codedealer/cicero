@@ -6,3 +6,7 @@ services:
       - { name: form.type, alias: 'nb_work_type'}
   nb.entity_action_mapper:
     class: NB\UserBundle\RouteHelper\EntityActionMapper
+  nb.listener.controller_init:
+    class: NB\UserBundle\EventListener\ControllerInitListener
+    tags:
+      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

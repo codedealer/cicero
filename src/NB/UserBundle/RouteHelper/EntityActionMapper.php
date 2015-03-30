@@ -7,7 +7,8 @@ class EntityActionMapper
 
 	public function registerAction($entityName, $actionType, $action){
 		
-			if(is_array($this->actionMap[$entityName])){
+			if(array_key_exists($entityName, $this->actionMap) 
+				&& is_array($this->actionMap[$entityName])){
 				$this->actionMap[$entityName][$actionType] = $action;
 			}
 			else{
@@ -19,7 +20,7 @@ class EntityActionMapper
 	public function map($entityName, $actionType){
 		if(array_key_exists($entityName, $this->actionMap) 
 			&& is_array($this->actionMap[$entityName])
-			&& array_key_exists($actionType, $this->actionMap)){
+			&& array_key_exists($actionType, $this->actionMap[$entityName])){
 			return $this->actionMap[$entityName][$actionType];
 		}
 		return false;
