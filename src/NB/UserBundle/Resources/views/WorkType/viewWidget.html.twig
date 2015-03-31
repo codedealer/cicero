@@ -1,0 +1,25 @@
+{% macro workFields(entity) %}
+<div class="control-group">
+	<label class="control-label">Тип работы</label>
+	<div class="controls"><div class="control-label">{{ entity.name }}</div></div>
+</div>
+<div class="control-group">
+	<label class="control-label">{{ entity.isHourly ? 'Почасовая ставка' : 'Фиксированная ставка' }}</label>
+</div>
+<div class="control-group">
+{% if entity.isHourly %}
+	<table class="table table-hover">
+		<tr><th>Должность</th><th>Ставка (руб/час)</th></tr>
+		{% for workrate in entity.workrates %}
+			<tr>
+				<td>{{ workrate.titles.name }}</td>
+				<td>{{ workrate.rate }}</td>
+			</tr>
+		{% endfor %}
+	</table>
+{% else %}
+	<label class="control-label">Ставка (руб.)</label>
+	<div class="controls"><div class="control-label">{{ entity.flatrate }}</div></div>
+{% endif %}
+</div>
+{% endmacro %}

@@ -10,9 +10,22 @@ oro_menu_config:
       route: 'oro_entity_index'
       routeParameters:
         entityName: 'Extend_Entity_worktype'
+    clients_tab:
+      label: 'Клиенты'
+      uri: '#'
+    clients:
+      label: 'Клиенты'
+      route: 'oro_entity_index'
+      routeParameters:
+        entityName: 'Extend_Entity_client'
+      extras:
+        routes: ['/^Extend_Entity_client/']
   tree:
     application_menu:
       children:
+        clients_tab:
+          children:
+            clients: ~
         system_tab:
           children:
             users_management:

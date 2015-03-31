@@ -129,5 +129,28 @@ class WorkTypeController extends Controller
             'form'          => $form->createView(),
         ]);
 	}
+
+	public function viewAction($entityName, $id){
+		$entityClass = 'Extend\Entity\worktype';
+		
+		if(!class_exists($entityClass))
+			throw $this->createNotFoundException();
+
+		$this->checkAccess('VIEW', $entityClass);
+
+		$record = $this->getDoctrine()->getManager()->getRepository($entityClass)->find($id);
+		$entityConfigProvider = $this->get('oro_entity_config.provider.entity');
+
+		if(!$record)
+			throw $this->createNotFoundException();
+
+		return $this->render('NBUserBundle:WorkType:view.html.twig', [
+			'entity_name' => $entityName,
+			'entity' => $record,
+			'id' => $id,
+			'entity_config' => $entityConfigProvider->getConfig($entityClass),
+			'entity_class' => $entityClass
+			]);
+	}
 }
 ?>

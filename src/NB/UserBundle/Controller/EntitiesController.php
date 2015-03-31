@@ -18,7 +18,9 @@ class EntitiesController extends Controller implements InitializableControllerIn
 
     public function init(){
         $em = $this->get('nb.entity_action_mapper');
-        $em->registerAction('Extend_Entity_worktype', 'update', 'NBUserBundle:WorkType:update');
+        $em->registerAction('Extend_Entity_worktype', 'update', 'NBUserBundle:WorkType:update')
+           ->registerAction('Extend_Entity_worktype', 'view', 'NBUserBundle:WorkType:view')
+           ;
     }
 
     /**
@@ -32,7 +34,7 @@ class EntitiesController extends Controller implements InitializableControllerIn
     public function updateAction(Request $request, $entityName, $id){
 
     	$action = $this->get('nb.entity_action_mapper')->map($entityName, 'update');
-        $this->get('logger')->notice('bobobo' . $action);
+        
         if(false !== $action)
             return $this->forward($action, [
                 'request' => $request,
@@ -41,5 +43,25 @@ class EntitiesController extends Controller implements InitializableControllerIn
                 ]);
         else
     		return parent::updateAction($request, $entityName, $id);
+    }
+
+    /**
+     * @Route(
+     *  "view/{entityName}/item/{id}",
+     *  name="oro_entity_view"
+     * )
+     * @Template()
+     */
+    public function viewAction($entityName, $id){
+
+        $action = $this->get('nb.entity_action_mapper')->map($entityName, 'view');
+        
+        if(false !== $action)
+            return $this->forward($action, [
+                'entityName' => $entityName,
+                'id' => $id
+                ]);
+        else
+            return parent::viewAction($entityName, $id);
     }
 }
