@@ -12,13 +12,13 @@ use Oro\Bundle\SecurityBundle\Acl\Domain\OneShotIsGrantedObserver;
 
 class CollaborationDatagridListener
 {
-	private $configProvider, $sc, $aclHelper, $logger;
+	private $configProvider, $sc, $aclHelper, $aclVoter;
 
-	public function __construct($configProvider, $securityContext, $aclVoter, $logger){
+	public function __construct($configProvider, $securityContext, $aclVoter, $aclHelper){
 		$this->configProvider = $configProvider;
 		$this->sc = $securityContext;
 		$this->aclVoter = $aclVoter;
-		$this->logger = $logger;
+		$this->aclHelper = $aclHelper;
 	}
 
 	public function onBuildAfter(BuildAfter $event){
@@ -35,7 +35,7 @@ class CollaborationDatagridListener
 			$this->aclVoter->addOneShotIsGrantedObserver($observer);
 			$this->sc->isGranted('VIEW', 'entity:' . $className);
 			$accessLevel = $observer->getAccessLevel();
-			
+
 			if($accessLevel == AccessLevel::BASIC_LEVEL){
 				$queryBuilder = $datasource->getQueryBuilder();
 				$id = $this->sc->getToken()->getUser()->getId();
@@ -45,18 +45,14 @@ class CollaborationDatagridListener
 			}
 		}
 	}
-
-	//currently is not in use
-	/*
+	
 	public function onResultBefore(OrmResultBefore $event){
 		if($this->hasCollaborationFeature($event->getDatagrid()->getParameters()->get('class_name')))
 			return;
 		//to standard objects apply default acl
 		$config = $event->getDatagrid()->getConfig();
-		if(!$config->offsetGetByPath(Builder::DATASOURCE_SKIP_ACL_CHECK, false))
-			$this->aclHelper->apply($event->getQuery());
+		$this->aclHelper->apply($event->getQuery());
 	}
-	*/
 
 	protected function hasCollaborationFeature($className){
 		if(!$this->configProvider->hasConfig($className))
