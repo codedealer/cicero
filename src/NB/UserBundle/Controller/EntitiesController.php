@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use Oro\Bundle\EntityBundle\Controller\EntitiesController as Controller;
 
@@ -55,7 +56,7 @@ class EntitiesController extends Controller implements InitializableControllerIn
 
         $entityConfig = $entityConfigProvider->getConfig($entityClass);
 
-        if($entityConfig->has('collaboration') && $entityConfig->get('collaboration')){
+        if(false && $entityConfig->has('collaboration') && $entityConfig->get('collaboration')){
             return $this->render('NBUserBundle:Entities:index.html.twig', [
                 'entity_name'  => $entityName,
                 'entity_class' => $entityClass,

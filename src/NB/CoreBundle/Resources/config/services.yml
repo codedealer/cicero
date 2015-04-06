@@ -11,3 +11,12 @@ services:
       arguments: [ @service_container ]
       tags:
         - { name: doctrine.event_subscriber }
+    nb.event_listener.collab_grid_listener:
+      class: NB\CoreBundle\EventListener\CollaborationDatagridListener
+      arguments:  
+        -  @oro_entity_config.provider.entity
+        -  @security.context
+        -  @?security.acl.voter.basic_permissions
+        -  @logger
+      tags:
+        - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after.custom-entity-grid, method: onBuildAfter, priority: -255 }
