@@ -1,0 +1,13 @@
+oro_entity_config:
+  entity:
+    entity:
+      items:
+        collaboration:
+          options:
+            default_value: false
+          form:
+            type: checkbox
+            options:
+              block: associations
+              required: false
+              label: 'Доступно другим пользователям'

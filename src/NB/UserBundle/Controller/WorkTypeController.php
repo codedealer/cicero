@@ -10,7 +10,7 @@ class WorkTypeController extends Controller
 {
 	protected function checkAccess($permission, $entityName)
     {
-    	$securityFacade = $this->get('oro_security.security_facade');
+        $securityFacade = $this->get('oro_security.security_facade');
     	$isGranted = $securityFacade->isGranted($permission, 'entity: ' . $entityName);
     	if(!$isGranted)
     		throw new AccessDeniedException('Доступ запрещен.');

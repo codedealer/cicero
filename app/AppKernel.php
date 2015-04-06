@@ -11,6 +11,7 @@ class AppKernel extends OroKernel
         $bundles = array(
         // bundles,
             new NB\UserBundle\NBUserBundle(),
+            new NB\CoreBundle\NBCoreBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev'))) {
