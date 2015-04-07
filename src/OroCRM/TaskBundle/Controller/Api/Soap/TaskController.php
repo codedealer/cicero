@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\TaskBundle\Controller\Api\Soap;
+namespace OroCRM\TaskBundle\Controller\Api\Soap;
 
 use Symfony\Component\Form\FormInterface;
 
@@ -17,7 +17,7 @@ class TaskController extends SoapController
      * @Soap\Method("getTasks")
      * @Soap\Param("page", phpType="int")
      * @Soap\Param("limit", phpType="int")
-     * @Soap\Result(phpType = "OroCRM\Bundle\TaskBundle\Entity\TaskSoap[]")
+     * @Soap\Result(phpType = "OroCRM\TaskBundle\Entity\TaskSoap[]")
      * @AclAncestor("orocrm_task_view")
      */
     public function cgetAction($page = 1, $limit = 10)
@@ -28,7 +28,7 @@ class TaskController extends SoapController
     /**
      * @Soap\Method("getTask")
      * @Soap\Param("id", phpType = "int")
-     * @Soap\Result(phpType = "OroCRM\Bundle\TaskBundle\Entity\TaskSoap")
+     * @Soap\Result(phpType = "OroCRM\TaskBundle\Entity\TaskSoap")
      * @AclAncestor("orocrm_task_view")
      */
     public function getAction($id)
@@ -38,7 +38,7 @@ class TaskController extends SoapController
 
     /**
      * @Soap\Method("createTask")
-     * @Soap\Param("task", phpType = "OroCRM\Bundle\TaskBundle\Entity\TaskSoap")
+     * @Soap\Param("task", phpType = "OroCRM\TaskBundle\Entity\TaskSoap")
      * @Soap\Result(phpType = "int")
      * @AclAncestor("orocrm_task_create")
      */
@@ -50,7 +50,7 @@ class TaskController extends SoapController
     /**
      * @Soap\Method("updateTask")
      * @Soap\Param("id", phpType = "int")
-     * @Soap\Param("task", phpType = "OroCRM\Bundle\TaskBundle\Entity\TaskSoap")
+     * @Soap\Param("task", phpType = "OroCRM\TaskBundle\Entity\TaskSoap")
      * @Soap\Result(phpType = "boolean")
      * @AclAncestor("orocrm_task_update")
      */
