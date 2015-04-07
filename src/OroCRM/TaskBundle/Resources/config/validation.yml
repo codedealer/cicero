@@ -1,0 +1,14 @@
+OroCRM\Bundle\TaskBundle\Entity\Task:
+    constraints:
+        - OroCRM\TaskBundle\Validator\Constraints\DueDateRequired: ~
+    properties:
+        subject:
+            - NotBlank: ~
+            - Length:
+                max: 255
+        dueDate:
+            - DateTime: ~
+        taskPriority:
+            - NotBlank: ~
+        owner:
+            - NotBlank: ~

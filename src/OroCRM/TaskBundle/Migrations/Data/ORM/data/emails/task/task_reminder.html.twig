@@ -1,0 +1,11 @@
+@name = task_reminder
+@entityName = OroCRM\Bundle\TaskBundle\Entity\Task
+@subject = {{ entity.subject }} is due on {{ entity.dueDate|date('F j, Y, g:i A') }}
+@isSystem = 1
+@isEditable = 1
+
+<h3>{{ entity.subject }}</h3>
+<p><i>Description:</i> {{ entity.description }}</p>
+<p><i>Priority:</i> {{ entity.taskPriority }}</p>
+<p><i>Assigned To:</i> {{ entity.owner }}</p>
+<p><i>Due date:</i> {{ entity.dueDate|date('F j, Y, g:i A') }}</p>
