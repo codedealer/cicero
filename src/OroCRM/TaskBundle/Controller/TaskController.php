@@ -51,7 +51,7 @@ class TaskController extends Controller
     public function tasksWidgetAction($perPage)
     {
         /** @var TaskRepository $repository */
-        $repository = $this->getRepository('OroCRM\Bundle\TaskBundle\Entity\Task');
+        $repository = $this->getRepository('OroCRM\TaskBundle\Entity\Task');
         $id = $this->getUser()->getId();
         $perPage = (int)$perPage;
         $tasks = $repository->getTasksAssignedTo($id, $perPage);

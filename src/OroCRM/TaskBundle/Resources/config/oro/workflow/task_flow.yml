@@ -6,7 +6,7 @@ imports:
 
 workflows:
     task_flow:
-        label: 'Task Flow'
-        entity: OroCRM\Bundle\TaskBundle\Entity\Task
+        label: 'выполнение задачи'
+        entity: OroCRM\TaskBundle\Entity\Task
         entity_attribute: task
         start_step: open
