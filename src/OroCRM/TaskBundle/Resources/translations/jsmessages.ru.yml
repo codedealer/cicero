@@ -1,0 +1,7 @@
+"Task created successfully": "Задача создана"
+"Create task": "Создать задачу"
+orocrm:
+    task:
+        assigned_tasks_widget:
+            settings: Настройки виджета задач
+            number_of_tasks: Показывать задач

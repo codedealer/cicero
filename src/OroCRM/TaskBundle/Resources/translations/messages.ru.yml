@@ -1,0 +1,41 @@
+orocrm:
+    task:
+        menu:
+            task_list.description:  Список задач
+            my_tasks: Мои задачи
+
+        #
+        # OroCRM/Bundle/TaskBundle/Entity/Task
+        #
+        entity_label:               Задача
+        entity_plural_label:        Задачи
+        entity_description:         Represent task
+        subject.label:              Тема
+        description.label:          Описание
+        due_date.label:             Срок исполнения
+        workflow_step.label:        Статус
+        task_priority.label:        Приоритет
+        owner.label:                Назначено
+        id.label:                   Id
+        workflow_item.label:        Часть рабочего процесса
+        organization.label:         Организация
+
+        user_tasks: Задачи пользователя
+        info_widget_title: Информация о задаче
+        add_entity: Добавить задачу
+        add_entity.title: Add a task to this record
+        assign_entity: Назначить задачу
+        assign_entity.title: Дать этому пользователю задание
+        assign_entity.widget_title: Дать %username% задание
+        saved_message: Сохранено
+
+        user_tasks_section: Задачи
+        assigned_tasks_widget:
+            no_task_exist: Текущих задач нет
+            update_widget: Перезагрузить список задач
+
+        view_task:   Просмотр {{ entity }}
+        update_task: Обновить {{ entity }}
+        delete_task: Удалить {{ entity }}
+        created_by:  назначено для {{ user }} к {{ date }}
+        changed_by:  назначено для {{ user }} к {{ date }}, обновлено {{ editor }} в {{ editor_date }}
