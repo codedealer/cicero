@@ -21,3 +21,7 @@ composer.lock
 *~
 
 /app/SymfonyRequirements.php
+
+app/parameters.yml.copy
+
+*.zip
