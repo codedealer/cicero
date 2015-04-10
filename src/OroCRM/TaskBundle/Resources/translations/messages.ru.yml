@@ -37,5 +37,5 @@ orocrm:
         view_task:   Просмотр {{ entity }}
         update_task: Обновить {{ entity }}
         delete_task: Удалить {{ entity }}
-        created_by:  назначено для {{ user }} в {{ date }}
-        changed_by:  назначено для {{ user }} в {{ date }}, обновлено {{ editor }} в {{ editor_date }}
+        created_by:  назначена для {{ user }} в {{ date }}
+        changed_by:  назначена для {{ user }} в {{ date }}, обновлено {{ editor }} в {{ editor_date }}
