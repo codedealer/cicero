@@ -15,7 +15,7 @@ datagrid:
                     - CONCAT(owner.firstName, CONCAT(' ', owner.lastName)) as ownerName
                     - owner.id as ownerId
                 from:
-                    - { table: %orocrm_task.entity.class%, alias: workunit }
+                    - { table: %nb_workunit.entity.class%, alias: workunit }
                 join:
                     left:
                         - { join: workunit.worktype, alias: worktype }
@@ -24,10 +24,10 @@ datagrid:
         columns:
             startDate:
                 label:         Начало
-                type:          date
+                frontend_type:          date
             endDate:
                 label:         Окончание
-                type:          date
+                frontend_type:          date
             worktypeName:
                 label:         Тип работы
             subject:

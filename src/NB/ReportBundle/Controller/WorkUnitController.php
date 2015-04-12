@@ -14,7 +14,7 @@ use NB\ReportBundle\Entity\WorkUnit;
 /**
  * @Route("/work")
  */
-class DefaultController extends Controller
+class WorkUnitController extends Controller
 {
     /**
      * @Route(
@@ -51,11 +51,13 @@ class DefaultController extends Controller
     {
         $workunit = new WorkUnit();
 
-        $form = $this->createForm('nb_workunit_type', $workunit);
+        $form = $this->createForm('nb_workunit_form', $workunit);
 
         return [
         	'entity' => $workunit,
-        	'form' => $form->createView()
+        	'form' => $form->createView(),
+        	'formAction' => $this->get('oro_entity.routing_helper')
+            ->generateUrlByRequest('nb_workunit_create', $this->getRequest())
         ];
     }
 

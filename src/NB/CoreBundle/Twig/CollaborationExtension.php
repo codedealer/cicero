@@ -9,7 +9,7 @@ class CollaborationExtension extends \Twig_Extension
 
 	public function getFunctions(){
 		return [
-			new \Twig_SimpleFunction('is_collaborate', 'isCollaborate');
+			new \Twig_SimpleFunction('is_collaborate', 'isCollaborate')
 		];
 	}
 

@@ -1,0 +1,13 @@
+nb_report_bundle:
+    resource:     "@NBReportBundle/Controller"
+    type:         annotation
+    prefix:       /
+
+nb_report_bundle_api:
+    resource:     "@NBReportBundle/Controller/Api/Rest/WorkUnitController.php"
+    type:         rest
+    prefix:       api/rest/{version}
+    requirements:
+        version:  latest|v1
+    defaults:
+        version:  latest

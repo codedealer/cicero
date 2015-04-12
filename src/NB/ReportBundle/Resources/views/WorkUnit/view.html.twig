@@ -57,16 +57,16 @@
 
                 {%- set clientData -%}
                 {%- if entity.client -%}
-                    {% if resource_granted('oro_user_user_view') %}
-                        <a href="{{ path('oro_user_view', {'id': entity.owner.id}) }}">
-                            {{ entity.owner|oro_format_name|escape }}
+                    {% if is_collaborate(entity.client, app.user) %}
+                        <a href="{{ path('oro_ext_client_view', {'id': entity.client.id}) }}">
+                            {{ entity.client.name }}
                         </a>
                     {% else %}
-                        {{ entity.owner|oro_format_name|escape }}
+                        {{ entity.client.name }}
                     {% endif %}
                 {%- endif -%}
                 {%- endset -%}
-                {{ UI.renderHtmlProperty('orocrm.task.owner.label'|trans, ownerData) }}
+                {{ UI.renderHtmlProperty('Клиент', clientData) }}
             </div>
             <div class="responsive-block">
                 {{ entityConfig.renderDynamicFields(entity) }}
@@ -84,7 +84,7 @@
         }
     ] %}
 
-    {% set id = 'taskView' %}
+    {% set id = 'workunitView' %}
     {% set data = { 'dataBlocks': dataBlocks } %}
 
     {{ parent() }}
