@@ -21,3 +21,8 @@ services:
       tags:
         - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after.custom-entity-grid, method: onBuildAfter, priority: -255 }
         - { name: kernel.event_listener, event: oro_datagrid.datagrid.result.before.custom-entity-grid, method: onResultBefore }
+    nb.collab_twig_exntension:
+      class: NB\CoreBundle\Twig\CollaborationExtension
+      public: false
+      tags:
+        - { name: twig.extension }
