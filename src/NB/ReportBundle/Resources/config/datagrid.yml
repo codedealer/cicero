@@ -1,0 +1,108 @@
+datagrid:
+    workunit-grid:
+        extended_entity_name: %nb_workunit.entity.class%
+        source:
+            type: orm
+            acl_resource: nb_workunit_view
+            query:
+                select:
+                    - workunit.id
+                    - workunit.subject
+                    - workunit.startDate
+                    - workunit.endDate
+                    - worktype.name as worktypeName
+                    - client.name as clientName
+                    - CONCAT(owner.firstName, CONCAT(' ', owner.lastName)) as ownerName
+                    - owner.id as ownerId
+                from:
+                    - { table: %orocrm_task.entity.class%, alias: workunit }
+                join:
+                    left:
+                        - { join: workunit.worktype, alias: worktype }
+                        - { join: workunit.owner, alias: owner }
+                        - { join: workunit.client, alias: client }
+        columns:
+            startDate:
+                label:         Начало
+                type:          date
+            endDate:
+                label:         Окончание
+                type:          date
+            worktypeName:
+                label:         Тип работы
+            subject:
+                label:         nb.wu.subject.label
+            ownerName:
+                label:         Юрист
+            clientName:
+                label:         Клиент
+        sorters:
+            columns:
+                startDate:
+                    data_name: workunit.startDate
+                endDate:
+                    data_name: workunit.endDate
+                worktypeName:
+                    data_name: worktypeName
+                ownerName:
+                    data_name: ownerName
+                clientName:
+                    data_name: clientName
+            default:
+                startDate: ASC
+        filters:
+            columns:
+                startDate:
+                    type: date
+                    data_name: workunit.startDate
+                endDate:
+                    type: date
+                    data_name: workunit.endDate
+                subject:
+                    type:      string
+                    data_name: workunit.subject
+                worktypeName:
+                    type:      string
+                    data_name: worktypeName
+                client:
+                    type:      string
+                    data_name: clientName
+                ownerName:
+                    type:      string
+                    data_name: ownerName
+        properties:
+            id: ~
+            view_link:
+                type:       url
+                route:      nb_workunit_view
+                params:     [ id ]
+            update_link:
+                type:       url
+                route:      nb_workunit_update
+                params:     [ id ]
+            delete_link:
+                type:       url
+                route:      nb_workunit_api_delete_task
+                params:     [ id ]
+        actions:
+            view:
+                type:          navigate
+                acl_resource:  nb_workunit_view
+                label:         oro.grid.action.view
+                icon:          eye-open
+                link:          view_link
+                rowAction:     true
+            update:
+                type:          navigate
+                acl_resource:  nb_workunit_update
+                label:         oro.grid.action.update
+                icon:          edit
+                link:          update_link
+            delete:
+                type:          delete
+                acl_resource:  nb_workunit_delete
+                label:         oro.grid.action.delete
+                icon:          trash
+                link:          delete_link
+        options:
+            entity_pagination: true

@@ -1,0 +1,6 @@
+nb:
+  wu:
+    entity_plural_label: Текущие дела
+    entity_label: Отчет о работе
+    subject.label: Комментарий
+    timePeriod.label: Время

@@ -1,3 +1,8 @@
+nb_report:
+    resource: "@NBReportBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 #
 # 3rd party routes
 #
