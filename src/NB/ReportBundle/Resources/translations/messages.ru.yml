@@ -4,3 +4,8 @@ nb:
     entity_label: Отчет о работе
     subject.label: Комментарий
     timePeriod.label: Время
+  report:
+    workunit:
+      entity_label: Текущие дела
+      entity_plural_label: Текущие дела
+      owner.label: Назначено для

@@ -28,3 +28,6 @@ services:
         arguments:
             - %nb_workunit.entity.class%
             - @doctrine.orm.entity_manager
+  nb_workunit.datagrid.helper:
+        class: NB\ReportBundle\Datagrid\DatagridBuilderHelper
+        arguments: [@oro_locale.settings]

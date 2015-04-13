@@ -52,6 +52,28 @@ class WorkUnitController extends Controller
         $workunit = new WorkUnit();
 
         $form = $this->createForm('nb_workunit_form', $workunit);
+        $request = $this->getRequest();
+        if ($request->getMethod() == 'POST') {
+            $form->submit($request);
+            
+            if ($form->isValid()) {
+            	$em = $this->getDoctrine()->getManager();
+            	$em->persist($workunit);
+            	$em->flush();
+
+            	$id = $workunit->getId();
+
+            	$this->get('session')->getFlashBag()->add(
+                    'success',
+                    $this->get('translator')->trans('oro.entity.controller.message.saved')
+                );
+
+                return $this->get('oro_ui.router')->redirectAfterSave(
+                    ['route' => 'nb_workunit_update', 'parameters' => ['id'=> $id]],
+                    ['route' => 'nb_workunit_view', 'parameters' => ['id' => $id]]
+                );
+            }
+        }
 
         return [
         	'entity' => $workunit,
@@ -83,6 +105,40 @@ class WorkUnitController extends Controller
      */
     public function updateAction(WorkUnit $workunit)
     {
-        return false;
+        $em = $this->getDoctrine()->getManager();
+
+        /*if(!$id)
+        	throw $this->createNotFoundException();
+
+        $workunit = $em->getRepository('NBReportBundle:WorkUnit')->find($id);
+*/$id = $workunit->getId();
+        $form = $this->createForm('nb_workunit_form', $workunit);
+        $request = $this->getRequest();
+
+        if ($request->getMethod() == 'POST') {
+            $form->submit($request);
+            
+            if ($form->isValid()) {
+       
+            	$em->persist($workunit);
+            	$em->flush();
+
+            	$this->get('session')->getFlashBag()->add(
+                    'success',
+                    $this->get('translator')->trans('oro.entity.controller.message.saved')
+                );
+
+                return $this->get('oro_ui.router')->redirectAfterSave(
+                    ['route' => 'nb_workunit_update', 'parameters' => ['id'=> $id]],
+                    ['route' => 'nb_workunit_view', 'parameters' => ['id' => $id]]
+                );
+            }
+        }
+
+        return [
+        	'entity' => $workunit,
+        	'form' => $form->createView(),
+        	'formAction' => $this->get('router')->generate('nb_workunit_update', ['id' => $id])
+        ];
     }
 }

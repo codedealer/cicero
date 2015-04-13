@@ -55,7 +55,7 @@ class WorkUnit
 	protected $id = null;
 
 	/**
-	 * @ORM\Column(type="string", name="subject", length=255, unique=false, nullable=false)
+	 * @ORM\Column(type="string", name="subject", length=255, unique=false, nullable=true)
 	 */
 	protected $subject = null;
 	
@@ -200,10 +200,10 @@ class WorkUnit
     /**
      * Set worktype
      *
-     * @param \Entend\Entity\worktype $worktype
+     * @param \Extend\Entity\worktype $worktype
      * @return WorkUnit
      */
-    public function setWorktype(\Entend\Entity\worktype $worktype = null)
+    public function setWorktype(\Extend\Entity\worktype $worktype = null)
     {
         $this->worktype = $worktype;
 
@@ -213,7 +213,7 @@ class WorkUnit
     /**
      * Get worktype
      *
-     * @return \Entend\Entity\worktype 
+     * @return \Extend\Entity\worktype 
      */
     public function getWorktype()
     {

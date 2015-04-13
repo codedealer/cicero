@@ -1,4 +1,4 @@
-OroCRM\Bundle\TaskBundle\Entity\Task:
+OroCRM\TaskBundle\Entity\Task:
     alias:                          orocrm_task
     title_fields:                   [subject]
     route:

@@ -24,10 +24,10 @@ datagrid:
         columns:
             startDate:
                 label:         Начало
-                frontend_type:          date
+                frontend_type:          datetime
             endDate:
                 label:         Окончание
-                frontend_type:          date
+                frontend_type:          datetime
             worktypeName:
                 label:         Тип работы
             subject:
@@ -66,10 +66,16 @@ datagrid:
                     data_name: worktypeName
                 client:
                     type:      string
+                    label: Клиент
                     data_name: clientName
                 ownerName:
                     type:      string
                     data_name: ownerName
+            default:
+                startDate:
+                    value: { start: '{{2}}' }
+                    part: Oro\Bundle\FilterBundle\Provider\DateModifierInterface::PART_VALUE
+                    type: Oro\Bundle\FilterBundle\Form\Type\Filter\DateRangeFilterType::TYPE_MORE_THAN
         properties:
             id: ~
             view_link:
@@ -82,7 +88,7 @@ datagrid:
                 params:     [ id ]
             delete_link:
                 type:       url
-                route:      nb_workunit_api_delete_task
+                route:      nb_api_delete_workunit
                 params:     [ id ]
         actions:
             view:

@@ -2,33 +2,35 @@
 {% import 'OroUIBundle::macros.html.twig' as UI %}
 {% import 'OroEntityConfigBundle::macros.html.twig' as entityConfig %}
 
-{% oro_title_set({params : {"%entity.subject%": entity.subject|default('N/A') }}) %}
+{% oro_title_set({params : {"%entity.subject%": 'Дело #' ~ entity.id|default('N/A') }}) %}
 
 {% block navButtons %}
     {% if resource_granted('EDIT', entity) %}
         {{ UI.editButton({
-            'path' : path('orocrm_task_update', { id: entity.id }),
-            'entity_label': 'orocrm.task.entity_label'|trans
+            'path' : path('nb_workunit_update', { id: entity.id }),
+            'entity_label': 'nb.wu.entity_label'|trans
         }) }}
     {% endif %}
     {% if resource_granted('DELETE', entity) %}
         {{ UI.deleteButton({
-            'dataUrl': path('orocrm_api_delete_task', {'id': entity.id}),
+            'dataUrl': path('nb_api_delete_workunit', {'id': entity.id}),
             'dataRedirect': path('nb_workunit_index'),
             'aCss': 'no-hash remove-button',
             'id': 'btn-remove-user',
             'dataId': entity.id,
-            'entity_label': 'orocrm.task.entity_label'|trans
+            'entity_label': 'nb.wu.entity_label'|trans
         }) }}
     {% endif %}
 {% endblock navButtons %}
+
+{% block stats %} {% endblock stats %}
 
 {% block pageHeader %}
     {% set breadcrumbs = {
         'entity': entity,
         'indexPath': path('nb_workunit_index'),
         'indexLabel': 'nb.wu.entity_plural_label'|trans,
-        'entityTitle': entity.subject
+        'entityTitle': 'Дело #' ~ entity.id
     } %}
     {{ parent() }}
 {% endblock pageHeader %}
@@ -38,8 +40,8 @@
         <div class="row-fluid form-horizontal">
             <div class="responsive-block">
                 {{ UI.renderProperty('nb.wu.subject.label'|trans, entity.subject) }}
-                {{ UI.renderProperty('Начало', entity.startDate|oro_format_date_time) }}
-                {{ UI.renderProperty('Конец', entity.endDate|oro_format_date_time) }}
+                {{ UI.renderProperty('Начало', entity.startDate|oro_format_datetime) }}
+                {{ UI.renderProperty('Конец', entity.endDate|oro_format_datetime) }}
                 {{ UI.renderProperty('Тип работы', entity.worktype.name|default('N/A')) }}
 
                 {%- set ownerData -%}
@@ -53,12 +55,12 @@
                     {% endif %}
                 {%- endif -%}
                 {%- endset -%}
-                {{ UI.renderHtmlProperty('Владелец', ownerData) }}
+                {{ UI.renderHtmlProperty('Исполнитель', ownerData) }}
 
                 {%- set clientData -%}
                 {%- if entity.client -%}
                     {% if is_collaborate(entity.client, app.user) %}
-                        <a href="{{ path('oro_ext_client_view', {'id': entity.client.id}) }}">
+                        <a href="{{ path('oro_entity_view', {'id': entity.client.id, 'entityName' : 'Extend_Entity_client'}) }}">
                             {{ entity.client.name }}
                         </a>
                     {% else %}
@@ -79,7 +81,7 @@
             'title': 'General Information'|trans,
             'class': 'active',
             'subblocks': [
-                {'data' : [taskInformation]}
+                {'data' : [workunitInformation]}
             ]
         }
     ] %}

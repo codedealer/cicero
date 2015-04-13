@@ -1,6 +1,6 @@
 {% extends 'OroUIBundle:actions:update.html.twig' %}
-{% oro_title_set({params : {"%entity.subject%": entity.subject, "%entityName%": 'nb.wu.entity_label'|trans }}) %}
-{% set entityId = entity.id ? entity.id : false %}
+{% oro_title_set({params : {"%entity.subject%": 'Дело #' ~ entity.id, "%entityName%": 'nb.wu.entity_label'|trans }}) %}
+{% set entityId = entity.id %}
 
 {% block navButtons %}
     {% set html = UI.saveAndCloseButton() %}
@@ -12,7 +12,7 @@
 {% endblock navButtons %}
 
 {% block pageHeader %}
-        {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'nb.wu.entity_label'|trans}) %}
+        {% set title = 'oro.ui.update_entity'|trans({'%entityName%': 'nb.wu.entity_label'|trans}) %}
         {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
 {% endblock pageHeader %}
 
@@ -31,7 +31,6 @@
                     form_row(form.worktype),
                     form_row(form.subject),
                     form.owner is defined ? form_row(form.owner) : '',
-                    form_row(form.client)
                 ]
             }
         ]

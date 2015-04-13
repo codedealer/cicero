@@ -14,12 +14,9 @@ class WorkUnitType extends AbstractType
 	}
 
 	public function buildForm(FormBuilderInterface $builder, array $options){
-		if($this->securityFacade->isGranted('nb_workunit_assign'))
-			$builder->add('owner', 'oro_jqueryselect2_hidden', [
-				'autocomplete_alias' => 'users'
-				]);
+		
 		$builder
-			->add('subject', 'text', ['required' => true, 'label' => 'Комментарий'])
+			->add('subject', 'text', ['required' => false, 'label' => 'Комментарий'])
 			->add('startDate', 'oro_datetime', ['required' => true, 'label' => 'Начало'])
 			->add('endDate', 'oro_datetime', ['required' => true, 'label' => 'Конец'])
 			->add('worktype', 'translatable_entity', [
@@ -28,8 +25,11 @@ class WorkUnitType extends AbstractType
 					'label' => 'Тип работы'
 					])
 			->add('client', 'oro_jqueryselect2_hidden', [
-					'alias' => 'clients'
+					'autocomplete_alias' => 'clients',
+					'label' => 'Клиент',
+					'required' => true
 				])
+			
 			;
 		
 	}
