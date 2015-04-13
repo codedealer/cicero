@@ -107,11 +107,8 @@ class WorkUnitController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        /*if(!$id)
-        	throw $this->createNotFoundException();
-
-        $workunit = $em->getRepository('NBReportBundle:WorkUnit')->find($id);
-*/$id = $workunit->getId();
+        $id = $workunit->getId();
+        
         $form = $this->createForm('nb_workunit_form', $workunit);
         $request = $this->getRequest();
 
@@ -140,5 +137,15 @@ class WorkUnitController extends Controller
         	'form' => $form->createView(),
         	'formAction' => $this->get('router')->generate('nb_workunit_update', ['id' => $id])
         ];
+    }
+
+    /**
+     * @Route("/widget/info/{id}", name="nb_workunit_widget_info", requirements={"id"="\d+"})
+     * @Template
+     * @AclAncestor("nb_workunit_view")
+     */
+    public function infoAction(WorkUnit $entity)
+    {
+        return array('entity' => $entity);
     }
 }

@@ -8,4 +8,5 @@ nb:
     workunit:
       entity_label: Текущие дела
       entity_plural_label: Текущие дела
-      owner.label: Назначено для
+      owner.label: Исполнитель
+      calendar_label: Текущие дела
