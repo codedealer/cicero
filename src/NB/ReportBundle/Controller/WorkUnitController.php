@@ -138,4 +138,14 @@ class WorkUnitController extends Controller
         	'formAction' => $this->get('router')->generate('nb_workunit_update', ['id' => $id])
         ];
     }
+
+    /**
+     * @Route("/widget/info/{id}", name="nb_workunit_widget_info", requirements={"id"="\d+"})
+     * @Template
+     * @AclAncestor("nb_workunit_view")
+     */
+    public function infoAction(WorkUnit $entity)
+    {
+        return array('entity' => $entity);
+    }
 }

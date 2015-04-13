@@ -1,0 +1,23 @@
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+
+<div class="widget-content form-horizontal box-content row-fluid">
+    <div class="responsive-block">
+        {{ UI.renderProperty('nb.wu.subject.label'|trans, entity.subject) }}
+                {{ UI.renderProperty('Начало', entity.startDate|oro_format_datetime) }}
+                {{ UI.renderProperty('Конец', entity.endDate|oro_format_datetime) }}
+                {{ UI.renderProperty('Тип работы', entity.worktype.name|default('N/A')) }}
+        {{ UI.renderProperty('Исполнитель', entity.owner|oro_format_name|escape) }}
+        {%- set clientData -%}
+                {%- if entity.client -%}
+                    {% if is_collaborate(entity.client, app.user) %}
+                        <a href="{{ path('oro_entity_view', {'id': entity.client.id, 'entityName' : 'Extend_Entity_client'}) }}">
+                            {{ entity.client.name }}
+                        </a>
+                    {% else %}
+                        {{ entity.client.name }}
+                    {% endif %}
+                {%- endif -%}
+                {%- endset -%}
+                {{ UI.renderHtmlProperty('Клиент', clientData) }}
+    </div>
+</div>

@@ -31,3 +31,11 @@ services:
   nb_workunit.datagrid.helper:
         class: NB\ReportBundle\Datagrid\DatagridBuilderHelper
         arguments: [@oro_locale.settings]
+  nb_workunit.calendar_provider.work:
+        class: NB\ReportBundle\Provider\WorkUnitCalendarProvider
+        arguments:
+            - @oro_entity.doctrine_helper
+            - @oro_security.acl_helper
+            - @translator
+        tags:
+          - { name: oro_calendar.calendar_provider, alias: work }
