@@ -107,11 +107,8 @@ class WorkUnitController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        /*if(!$id)
-        	throw $this->createNotFoundException();
-
-        $workunit = $em->getRepository('NBReportBundle:WorkUnit')->find($id);
-*/$id = $workunit->getId();
+        $id = $workunit->getId();
+        
         $form = $this->createForm('nb_workunit_form', $workunit);
         $request = $this->getRequest();
 
