@@ -1,0 +1,13 @@
+{% extends 'OroUIBundle:actions:index.html.twig' %}
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+{% set gridName = 'workunit-grid' %}
+{% set pageTitle = 'nb.wu.entity_plural_label'|trans %}
+
+{% block navButtons %}
+    {% if resource_granted('nb_workunit_create') %}
+        {{ UI.addButton({
+            'path' : path('nb_workunit_create'),
+            'entity_label': 'nb.wu.entity_label'|trans
+        }) }}
+    {% endif %}
+{% endblock %}

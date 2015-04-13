@@ -1,0 +1,33 @@
+parameters:
+    nb_workunit.entity.class: NB\ReportBundle\Entity\WorkUnit
+
+services:
+  nb.form.type.workunit:
+    class: NB\ReportBundle\Form\Type\WorkUnitType
+    arguments: [@oro_security.security_facade]
+    tags:
+      - { name: form.type, alias: nb_workunit_form }
+  nb_workunit.form.api:
+        class: Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments:
+            - ~
+            - 'nb_workunit_form'
+  nb_workunit.form.handler.workunit_api:
+        class: %orocrm_task.form.handler.task_api.class%
+        scope: request
+        arguments:
+            - @nb_workunit.form.api
+            - @request
+            - @doctrine.orm.entity_manager
+            - @oro_entity.routing_helper
+  nb_workunit.manager.api:
+        class: Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager
+        parent: oro_soap.manager.entity_manager.abstract
+        arguments:
+            - %nb_workunit.entity.class%
+            - @doctrine.orm.entity_manager
+  nb_workunit.datagrid.helper:
+        class: NB\ReportBundle\Datagrid\DatagridBuilderHelper
+        arguments: [@oro_locale.settings]

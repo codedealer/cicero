@@ -26,3 +26,13 @@ services:
       public: false
       tags:
         - { name: twig.extension }
+    nb.clients_search_handler:
+      class: NB\CoreBundle\Autocomplete\CollaborationSearchHandler
+      arguments:
+        - Extend\Entity\client
+        - ["name"]
+        - @security.context
+      calls:
+        - [ initDoctrinePropertiesByManagerRegistry, ["@doctrine"]]
+      tags:
+        - { name: oro_form.autocomplete.search_handler, alias: clients }

@@ -123,7 +123,7 @@ fos_rest:
         default_format:       json
 
 fos_js_routing:
-    routes_to_expose:         [oro_*, orocrm*]
+    routes_to_expose:         [oro_*, orocrm*, nb_*]
 
 be_simple_soap:
     cache:

@@ -1,0 +1,22 @@
+oro_menu_config:
+    items:
+        workunit_list:
+            label: 'nb.wu.entity_plural_label'
+            route: 'nb_workunit_index'
+            extras:
+                position: 20
+                routes: ['nb_workunit_update', 'nb_workunit_create', 'nb_workunit_view']
+                description: 'orocrm.task.menu.task_list.description'
+
+    tree:
+        application_menu:
+            children:
+                activities_tab:
+                    children:
+                        workunit_list: ~
+
+oro_titles:
+    nb_workunit_index: ~
+    nb_workunit_view: 'Просмотреть отчет'
+    nb_workunit_create: oro.ui.create_entity
+    nb_workunit_update: 'Редактировать отчет о работе'
