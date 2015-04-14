@@ -15,12 +15,14 @@ class EntitySelectInterceptor extends EntitySelectHandler
 	}
 
 	public function search($query, $page, $perPage, $searchById = false){
+		$originalQuery = $query;
 		list($query, $targetEntity, $targetField) = explode(',', $query);
+		if($targetEntity != 'Extend_Entity_client')
+			return parent::search($originalQuery, $page, $perPage, $searchById);
+        
         $this->initForEntity($targetEntity, $targetField);
-        if($targetEntity != 'Extend_Entity_client')
-        	return parent::search($query, $page, $perPage, $searchById);
-        else
-        	return $this->hook($query, $page, $perPage, $searchById);
+       
+        return $this->hook($query, $page, $perPage, $searchById);
 	}
 
 	public function initForEntity($entityName, $targetField)
