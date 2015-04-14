@@ -39,8 +39,7 @@ class CollaborationDatagridListener
 			if($accessLevel == AccessLevel::BASIC_LEVEL){
 				$queryBuilder = $datasource->getQueryBuilder();
 				$id = $this->sc->getToken()->getUser()->getId();
-				$queryBuilder->orWhere('ce.owner = :userId')
-						 	 ->orWhere(':userId MEMBER OF ce.users')
+				$queryBuilder->andWhere('ce.owner = :userId OR :userId MEMBER OF ce.users')
 							 ->setParameter('userId', $id);
 			}
 		}
