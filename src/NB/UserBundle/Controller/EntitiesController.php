@@ -14,6 +14,7 @@ use Oro\Bundle\EntityBundle\Controller\EntitiesController as Controller;
 use NB\UserBundle\Controller\WorkTypeController;
 use NB\UserBundle\Model\InitializableControllerInterface;
 
+
 class EntitiesController extends Controller implements InitializableControllerInterface
 {
 
@@ -21,8 +22,33 @@ class EntitiesController extends Controller implements InitializableControllerIn
         $em = $this->get('nb.entity_action_mapper');
         $em->registerAction('Extend_Entity_worktype', 'update', 'NBUserBundle:WorkType:update')
            ->registerAction('Extend_Entity_worktype', 'view', 'NBUserBundle:WorkType:view')
-           //->registerAction('Extend_Entity_Project', 'update', 'NBUserBundle:Project:update')
+           ->registerAction('Extend_Entity_Court', 'index', 'NBCourtBundle:Court:index')
            ;
+    }
+
+    /**
+     * Grid of Custom/Extend entity.
+     *
+     * @param string $entityName
+     *
+     * @return array
+     *
+     * @Route(
+     *      "/{entityName}",
+     *      name="oro_entity_index"
+     * )
+     * @Template()
+     */
+    public function indexAction($entityName)
+    {
+        $action = $this->get('nb.entity_action_mapper')->map($entityName, 'index');
+        if(false !== $action)
+            return $this->forward($action, [
+                'entityName' => $entityName,
+                
+                ]);
+        else
+            return parent::indexAction($entityName);
     }
 
     /**

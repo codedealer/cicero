@@ -14,6 +14,7 @@ class AppKernel extends OroKernel
             new NB\CoreBundle\NBCoreBundle(),
             new OroCRM\TaskBundle\OroCRMTaskBundle(),
             new NB\ReportBundle\NBReportBundle(),
+            new NB\CourtBundle\NBCourtBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev'))) {

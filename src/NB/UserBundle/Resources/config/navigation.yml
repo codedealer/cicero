@@ -24,6 +24,20 @@ oro_menu_config:
         entityName: 'Extend_Entity_Project'
       extras:
         position: 50
+    court:
+      label: 'Судебные дела'
+      route: 'oro_entity_index'
+      routeParameters:
+        entityName: 'Extend_Entity_Court'
+      extras:
+        position: 51
+    courtinstance:
+      label: 'Суды'
+      route: 'oro_entity_index'
+      routeParameters:
+        entityName: 'Extend_Entity_CourtInstance'
+      extras:
+        position: 52
     clients_tab:
       label: 'Клиенты'
       uri: '#'
@@ -44,6 +58,8 @@ oro_menu_config:
           children:
             registration: ~
             project: ~
+            court: ~
+            courtinstance: ~
         system_tab:
           children:
             users_management:

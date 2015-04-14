@@ -1,0 +1,9 @@
+services:
+  nb_court.event_listener.datagrid_listener:
+    class: NB\CourtBundle\EventListener\DatagridListener
+    arguments:
+      - @router
+      -  @security.context
+      -  @?security.acl.voter.basic_permissions
+    tags:
+        - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after.court-grid, method: onBuildAfter }
