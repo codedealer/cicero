@@ -7,3 +7,7 @@ services:
       -  @?security.acl.voter.basic_permissions
     tags:
         - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after.court-grid, method: onBuildAfter }
+  nb_court.doctrine_subscriber:
+      class: NB\CourtBundle\EventListener\CourtDoctrineSubscriber
+      tags:
+        - { name: doctrine.event_subscriber }
