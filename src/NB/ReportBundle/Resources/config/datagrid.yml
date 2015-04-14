@@ -53,10 +53,10 @@ datagrid:
         filters:
             columns:
                 startDate:
-                    type: date
+                    type: datetime
                     data_name: workunit.startDate
                 endDate:
-                    type: date
+                    type: datetime
                     data_name: workunit.endDate
                 subject:
                     type:      string
