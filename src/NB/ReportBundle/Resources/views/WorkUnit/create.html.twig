@@ -37,20 +37,37 @@
         ]
     }] %}
 
-    {% set additionalData = [] %}
-    {% for child in form.children if child.vars.extra_field is defined and child.vars.extra_field %}
-        {% set additionalData = additionalData|merge([form_row(child)]) %}
-    {% endfor %}
-    {% if additionalData is not empty %}
+    {% set select_script = "
+    <script type=\"text/javascript\">
+        require(['jquery'],function($){
+            $('#nb_workunit_relation_form_relation').change(function(e){
+                var that = this;
+                
+                $('.select-target').fadeOut(400, function(){
+                    var target = $(that).val();
+                    if(target)
+                        $('.select-' + target).fadeIn();
+                });
+            });
+        });
+    </script>
+    " %}
+    
+    
         {% set dataBlocks = dataBlocks|merge([{
             'title': 'Additional'|trans,
             'subblocks': [{
                 'title': '',
                 'useSpan': false,
-                'data' : additionalData
+                'data' : [
+                    '<span class="text-info">Эта информация не будет указываться в отчете</span>',
+                    form_row(form.relation),
+                    form_row(form.registration, { attr: { class: 'select-target hide select-registration'} }),
+                     select_script 
+                ]
             }]
         }] ) %}
-    {% endif %}
+    
 
     {% set data = {
         'formErrors': form_errors(form)? form_errors(form) : null,

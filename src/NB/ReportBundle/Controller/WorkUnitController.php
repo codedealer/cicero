@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+use Doctrine\Common\Util\ClassUtils;
+
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 
@@ -16,6 +18,13 @@ use NB\ReportBundle\Entity\WorkUnit;
  */
 class WorkUnitController extends Controller
 {
+    protected $redirectMap = [
+    	'extendentityregistration' => [
+    		'route' => 'oro_entity_view',
+    		'params' => ['entityName' => 'Extend_Entity_Registration']
+    	],
+    ];
+
     /**
      * @Route(
      *      
@@ -51,12 +60,27 @@ class WorkUnitController extends Controller
     {
         $workunit = new WorkUnit();
 
-        $form = $this->createForm('nb_workunit_form', $workunit);
+        $form = $this->createForm('nb_workunit_relation_form', $workunit);
         $request = $this->getRequest();
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
             
             if ($form->isValid()) {
+            	$related = false;
+            	$rel = $form->get('relation')->getData();
+            	if($rel && $form->get($rel)->getData()){
+            		$relationData = $this->getRelationData($form->get($rel)->getData());
+            		$related = true;
+            		$workunit->setRelatedEntityId($relationData['id']);
+            		$workunit->setRelatedEntityClass($relationData['class']);
+ 					$redirect = $relationData['redirect'];
+            	}
+
+            	if($workunit->getStartDate() >= $workunit->getEndDate()){
+            		$correctEndDate = clone $workunit->getStartDate();
+            		$workunit->setEndDate($correctEndDate->modify('+1 hour'));
+            	}
+
             	$em = $this->getDoctrine()->getManager();
             	$em->persist($workunit);
             	$em->flush();
@@ -68,10 +92,22 @@ class WorkUnitController extends Controller
                     $this->get('translator')->trans('oro.entity.controller.message.saved')
                 );
 
-                return $this->get('oro_ui.router')->redirectAfterSave(
-                    ['route' => 'nb_workunit_update', 'parameters' => ['id'=> $id]],
-                    ['route' => 'nb_workunit_view', 'parameters' => ['id' => $id]]
-                );
+            	if(!$related)
+	                return $this->get('oro_ui.router')->redirectAfterSave(
+	                    ['route' => 'nb_workunit_update', 'parameters' => ['id'=> $id]],
+	                    ['route' => 'nb_workunit_view', 'parameters' => ['id' => $id]]
+	                );
+	            else
+	            	return $this->get('oro_ui.router')->redirectAfterSave(
+	                    [
+	                    	'route' => $redirect['route'], 
+	                    	'parameters' => array_merge(['id'=> $relationData['id']], $redirect['params'])
+	                    ],
+	                    [
+	                    	'route' => $redirect['route'], 
+	                    	'parameters' => array_merge(['id'=> $relationData['id']], $redirect['params'])
+	                    ]
+	                );
             }
         }
 
@@ -81,6 +117,18 @@ class WorkUnitController extends Controller
         	'formAction' => $this->get('oro_entity.routing_helper')
             ->generateUrlByRequest('nb_workunit_create', $this->getRequest())
         ];
+    }
+
+    protected function getRelationData($entity){
+    	$relationId = $entity->getId();
+    	$relationClass = ClassUtils::getClass($entity);
+    	$redirect = $this->redirectMap[str_replace('\\', '', strtolower($relationClass))];
+
+    	return [
+    		'id' => $relationId,
+    		'class' => $relationClass,
+    		'redirect' => $redirect
+    		];
     }
 
     /**
@@ -116,6 +164,10 @@ class WorkUnitController extends Controller
             $form->submit($request);
             
             if ($form->isValid()) {
+            	if($workunit->getStartDate() >= $workunit->getEndDate()){
+            		$correctEndDate = clone $workunit->getStartDate();
+            		$workunit->setEndDate($correctEndDate->modify('+1 hour'));
+            	}
        
             	$em->persist($workunit);
             	$em->flush();

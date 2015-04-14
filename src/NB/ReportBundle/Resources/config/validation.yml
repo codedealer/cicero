@@ -1,0 +1,17 @@
+NB\ReportBundle\Entity\WorkUnit:
+    properties:
+        startDate:
+            - NotBlank: ~
+            - DateTime: ~
+        endDate:
+            - NotBlank: ~
+            - DateTime: ~
+        worktype:
+            - NotBlank: ~
+        owner:
+            - NotBlank: ~
+        client:
+            - NotBlank: ~
+        subject:
+            - Length:
+                max: 255

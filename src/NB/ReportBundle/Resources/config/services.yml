@@ -7,6 +7,21 @@ services:
     arguments: [@oro_security.security_facade]
     tags:
       - { name: form.type, alias: nb_workunit_form }
+  nb.form.type.workunit_relation:
+    arguments: [@oro_security.security_facade]
+    class: NB\ReportBundle\Form\Type\WorkUnitRelationType
+    tags:
+      - { name: form.type, alias: nb_workunit_relation_form }
+  registration_search_handler:
+      class: NB\CoreBundle\Autocomplete\LightSearchHandler
+      arguments:
+        - Extend\Entity\Registration
+        - ["name"]
+        - @security.context
+      calls:
+        - [ initDoctrinePropertiesByManagerRegistry, ["@doctrine"]]
+      tags:
+        - { name: oro_form.autocomplete.search_handler, alias: registrations }
   nb_workunit.form.api:
         class: Symfony\Component\Form\Form
         factory_method: createNamed
