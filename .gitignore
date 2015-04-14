@@ -25,3 +25,5 @@ composer.lock
 app/parameters.yml.copy
 
 *.zip
+
+app/config/parameters.yml.1gb.yaml
