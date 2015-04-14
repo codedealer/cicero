@@ -17,6 +17,13 @@ oro_menu_config:
         entityName: 'Extend_Entity_Registration'
       extras:
         position: 40
+    project:
+      label: 'Проекты'
+      route: 'oro_entity_index'
+      routeParameters:
+        entityName: 'Extend_Entity_Project'
+      extras:
+        position: 50
     clients_tab:
       label: 'Клиенты'
       uri: '#'
@@ -36,6 +43,7 @@ oro_menu_config:
         activities_tab:
           children:
             registration: ~
+            project: ~
         system_tab:
           children:
             users_management:

@@ -69,6 +69,19 @@
                 {%- endif -%}
                 {%- endset -%}
                 {{ UI.renderHtmlProperty('Клиент', clientData) }}
+
+                {%- set relatedEntity -%}
+                {%- if relatedPath is defined -%}
+                    
+                        <a href="{{ relatedPath }}">
+                            К связанной сущности
+                        </a>
+                    
+                {%- endif -%}
+                {%- endset -%}
+                {% if relatedPath is defined %}
+                {{ UI.renderHtmlProperty('', relatedEntity) }}
+                {% endif %}
             </div>
             <div class="responsive-block">
                 {{ entityConfig.renderDynamicFields(entity) }}

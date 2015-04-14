@@ -21,6 +21,7 @@ class EntitiesController extends Controller implements InitializableControllerIn
         $em = $this->get('nb.entity_action_mapper');
         $em->registerAction('Extend_Entity_worktype', 'update', 'NBUserBundle:WorkType:update')
            ->registerAction('Extend_Entity_worktype', 'view', 'NBUserBundle:WorkType:view')
+           //->registerAction('Extend_Entity_Project', 'update', 'NBUserBundle:Project:update')
            ;
     }
 

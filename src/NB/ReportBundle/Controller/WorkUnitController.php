@@ -138,6 +138,19 @@ class WorkUnitController extends Controller
      */
     public function viewAction(WorkUnit $workunit)
     {
+        if($workunit->getRelatedEntityId() && $workunit->getRelatedEntityClass()){
+        	$entityName = $this->get('oro_entity.routing_helper')
+        				->decodeClassName($workunit->getRelatedEntityClass());
+        	return [
+        	'entity' => $workunit,
+        	'relatedPath' => $this->get('router')->generate('oro_entity_view', [
+        			'entityName' => $entityName,
+        			'id' => $workunit->getRelatedEntityId()
+        		])
+        	];
+        }
+        	
+
         return array('entity' => $workunit);
     }
 
