@@ -8,7 +8,9 @@ datagrid:
                 select:
                     - court.id
                     - court.name
+                    - court.number
                     - court.result
+                    - court.createdAt
                     - courtInstance.name as courtInstanceName
                     - client.name as clientName
                     - CONCAT(owner.firstName, CONCAT(' ', owner.lastName)) as ownerName
@@ -17,11 +19,13 @@ datagrid:
                     - { table: Extend\Entity\Court, alias: court }
                 join:
                     left:
-                        - { join: court.courtCurrent, alias: courtInstance }
+                        - { join: court.currentCourt, alias: courtInstance }
                         - { join: court.owner, alias: owner }
                         - { join: court.client, alias: client }
         columns:
             name:
+                label:         Название дела
+            number:
                 label:         Номер дела
             clientName:
                 label:         Клиент
@@ -29,23 +33,33 @@ datagrid:
                 label:         Суд
             result:
                 label:         Результат
+            createdAt:
+                label:         Открыто
+                frontend_type:          datetime
         sorters:
             columns:
                 name:
                     data_name: court.name
+                number:
+                    data_name: court.number
                 clientName:
                     data_name: clientName
                 courtInstanceName:
                     data_name: courtInstanceName
                 result:
                     data_name: court.result
+                createdAt:
+                    data_name: court.createdAt
             default:
-                name: ASC
+                createdAt: ASC
         filters:
             columns:
                 name:
                     type: string
                     data_name: court.name
+                number:
+                    type: string
+                    data_name: court.number
                 clientName:
                     type: string
                     label: Клиент
@@ -57,6 +71,9 @@ datagrid:
                 result:
                     type: string
                     data_name: court.result
+                createdAt:
+                    type: datetime
+                    data_name: court.createdAt
         properties:
             id: ~
             update_link:

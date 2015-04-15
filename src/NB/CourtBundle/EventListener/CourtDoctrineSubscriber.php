@@ -28,6 +28,7 @@ class CourtDoctrineSubscriber implements EventSubscriber
 				 ;
 		$args->getEntityManager()->persist($calendar);
 		$entity->setCalendar($calendar);
+		$entity->setCreatedAt(new \DateTime('now'));
 	}
 }
 ?>

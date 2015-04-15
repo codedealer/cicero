@@ -1,0 +1,67 @@
+{% extends 'OroUIBundle:actions:view.html.twig' %}
+{% import 'OroEntityConfigBundle::macros.html.twig' as entityConfig %}
+{% import 'OroCalendarBundle::templates.html.twig' as calendarTemplates %}
+
+{% oro_title_set({params : {
+    "%entityName%": entity_config.get('label')|default('N/A')|trans,
+    "%recordName%": 'oro.entity.item'|trans({'%id%': entity.id}) },
+}) %}
+
+{% block navButtons %}
+    {% if resource_granted('EDIT', 'entity:'~entity_class) %}
+        {{ UI.editButton({
+            'path': path('oro_entity_update', {entityName: entity_name, id: entity.id}),
+            'entity_label': entity_config.get('label')|default('N/A')|trans
+        }) }}
+    {% endif %}
+{% endblock navButtons %}
+
+{% block pageHeader %}
+    {% set breadcrumbs = {
+        'entity':      entity,
+        'indexPath':   path('oro_entityconfig_index'),
+        'indexLabel': 'oro.entity.plural_label'|trans,
+        'entityTitle': 'oro.entity.item'|trans({'%id%': entity.id}),
+        'additional': [{
+            'indexPath'  : path('oro_entity_index', {entityName: entity_name}),
+            'indexLabel' : entity_config.get('label')|default('N/A')|trans
+        }]
+    }%}
+
+    {{ parent() }}
+{% endblock pageHeader %}
+
+{% block stats %}
+{% endblock stats%}
+
+{% block content_data %}
+
+	{%- set generalInfo -%}
+	{{ UI.renderProperty('Название дела', entity.name) }}
+	{{ UI.renderProperty('Номер дела', entity.number) }}
+	{{ UI.renderHtmlProperty('Описание', entity.description|nl2br) }}
+	{{ UI.renderHtmlProperty('Исполнитель', entityConfig.formatDynamicFieldValue(
+											entity,
+											entity_class,
+											'owner',
+											entity.owner
+											)) }}
+	{{ UI.renderHtmlProperty('Ведущие юристы', entityConfig.formatDynamicFieldValue(
+											entity,
+											entity_class,
+											'owner',
+											entity.owner
+											)) }}
+	{%- endset -%}
+
+    {% set data = { 'dataBlocks': [{
+        'title': 'General'|trans,
+        'class': 'active',
+        'subblocks': [{
+            'title': 'General Information'|trans,
+            'data':  [generalInfo]
+        }]
+    }] } %}
+
+    {{ parent() }}
+{% endblock content_data %}

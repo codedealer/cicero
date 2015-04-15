@@ -30,5 +30,36 @@ class CourtController extends Controller
 
         return $this->render('NBCourtBundle:Court:index.html.twig');
 	}
+
+	public function viewAction($entityName, $id){
+		$entityClass = $this->get('oro_entity.routing_helper')->decodeClassName($entityName);
+
+        if (!class_exists($entityClass)) {
+            throw $this->createNotFoundException();
+        }
+
+        $this->checkAccess('VIEW', $entityClass);
+
+        $em = $this->getDoctrine()->getManager();
+        $entityConfigProvider = $this->get('oro_entity_config.provider.entity');
+        $record = $em->getRepository($entityClass)->find($id);
+
+        if (!$record) {
+            throw $this->createNotFoundException();
+        }
+
+        $calendarConfigProvider = $this->get('oro_calendar.provider.calendar_config');
+        $dateRange = $calendarConfigProvider->getDateRange();
+
+        return $this->render('NBCourtBundle:Court:view.html.twig', [
+        	'entity_name'   => $entityName,
+            'entity'        => $record,
+            'id'            => $id,
+            'entity_config' => $entityConfigProvider->getConfig($entityClass),
+            'entity_class'  => $entityClass,
+            'startDate' 	=> $dateRange['startDate'],
+            'endDate'		=> $dateRange['endDate']
+        	]);
+	}
 }
 ?>

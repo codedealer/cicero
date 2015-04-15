@@ -23,7 +23,7 @@ class EntitiesController extends Controller implements InitializableControllerIn
         $em->registerAction('Extend_Entity_worktype', 'update', 'NBUserBundle:WorkType:update')
            ->registerAction('Extend_Entity_worktype', 'view', 'NBUserBundle:WorkType:view')
            ->registerAction('Extend_Entity_Court', 'index', 'NBCourtBundle:Court:index')
-           //->registerAction('Extend_Entity_Court', 'update', 'NBCourtBundle:Court:update')
+           ->registerAction('Extend_Entity_Court', 'view', 'NBCourtBundle:Court:view')
            ;
     }
 
