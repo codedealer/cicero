@@ -1,0 +1,9 @@
+
+nb_court_bundle_api:
+    resource:     "@NBCourtBundle/Controller/Api/Rest/SysCalendarEventController.php"
+    type:         rest
+    prefix:       api/rest/{version}
+    requirements:
+        version:  latest|v1
+    defaults:
+        version:  latest

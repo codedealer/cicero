@@ -51,13 +51,26 @@ class CourtController extends Controller
         $calendarConfigProvider = $this->get('oro_calendar.provider.calendar_config');
         $dateRange = $calendarConfigProvider->getDateRange();
 
-        
+        $user = $this->getUser();
+        $organization = $this->get('oro_security.security_facade')->getOrganization();
+
+        $calendar = $em->getRepository('OroCalendarBundle:Calendar')
+        			->findDefaultCalendar($user->getId(), $organization->getId());
+
         return $this->render('NBCourtBundle:Court:view.html.twig', [
         	'entity_name'   => $entityName,
             'entity'        => $record,
             'id'            => $id,
             'entity_config' => $entityConfigProvider->getConfig($entityClass),
             'entity_class'  => $entityClass,
+            'calendarCanvas' => $calendar,
+            'event_form' => $this->get('oro_calendar.calendar_event.form.template')->createView(),
+            'calendarOptions' => [
+            	'selectable' => false,
+            	'editable' 	 => false,
+            	'removable'	 => false,
+            	'timezoneOffset' => $calendarConfigProvider->getTimezoneOffset()
+            ],
             'startDate' 	=> $dateRange['startDate'],
             'endDate'		=> $dateRange['endDate']
         	]);

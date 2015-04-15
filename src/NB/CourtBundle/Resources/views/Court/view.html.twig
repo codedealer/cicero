@@ -7,52 +7,290 @@
     "%recordName%": 'oro.entity.item'|trans({'%id%': entity.id}) },
 }) %}
 
-{% block navButtons %}
-    {% if resource_granted('EDIT', 'entity:'~entity_class) %}
-        {{ UI.editButton({
-            'path': path('oro_entity_update', {entityName: entity_name, id: entity.id}),
-            'entity_label': entity_config.get('label')|default('N/A')|trans
-        }) }}
-    {% endif %}
-{% endblock navButtons %}
+{% block content %}
 
-{% block pageHeader %}
-    {% set breadcrumbs = {
-        'entity':      entity,
-        'indexPath':   path('oro_entityconfig_index'),
-        'indexLabel': 'oro.entity.plural_label'|trans,
-        'entityTitle': 'oro.entity.item'|trans({'%id%': entity.id}),
-        'additional': [{
-            'indexPath'  : path('oro_entity_index', {entityName: entity_name}),
-            'indexLabel' : entity_config.get('label')|default('N/A')|trans
-        }]
-    }%}
+<div class="layout-content">
+    <div class="container-fluid page-title">
+        {% block workflowStepListContainer %}
+            {% placeholder page_title_before with {entity: entity} %}
+        {% endblock  %}
+        <div class="navigation clearfix navbar-extra navbar-extra-right">
+            <div class="row">
+                <div class="pull-left pull-left-extra">
+                {% block pageHeader %}
+                	{% set breadcrumbs = {
+				        'entity':      entity,
+				        'indexPath':   path('oro_entityconfig_index'),
+				        'indexLabel': 'oro.entity.plural_label'|trans,
+				        'entityTitle': 'oro.entity.item'|trans({'%id%': entity.id}),
+				        'additional': [{
+				            'indexPath'  : path('oro_entity_index', {entityName: entity_name}),
+				            'indexLabel' : entity_config.get('label')|default('N/A')|trans
+				        }]
+				    }%}
+                    <div class="clearfix customer-info well-small{% if avatar is not defined %} customer-simple{% endif %}">
+                        {% if avatar is defined %}
+                            <div class="visual">
+                                <img src="{{ avatar ? avatar : asset('bundles/oroui/img/info-user.png') }}" alt="{{ breadcrumbs.entityTitle }}"/>
+                            </div>
+                        {% endif %}
+                        <div class="customer-content pull-left">
+                            <div class="clearfix">
+                                {% block breadcrumbs %}
+                                    <div class="pull-left">
+                                        {% if breadcrumbs.indexLabel is defined %}
+                                        <div class="sub-title">
+                                        {%- if breadcrumbs.indexPath is defined -%}
+                                            <a href="{{ oro_url_add_query(breadcrumbs.indexPath) }}">{{ breadcrumbs.indexLabel }}</a>
+                                        {%- else -%}
+                                            {{ breadcrumbs.indexLabel }}
+                                        {%- endif -%}
+                                        </div>
+                                        <span class="separator">/</span>
+                                        {% endif %}
+                                        {% if breadcrumbs.additional is defined %}
+                                            {% for breadcrumb in breadcrumbs.additional %}
+                                                <div class="sub-title"><a href="{{ oro_url_add_query(breadcrumb.indexPath) }}">{{ breadcrumb.indexLabel }}</a></div>
+                                                <span class="separator">/</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                        <h1 class="user-name">{{ breadcrumbs.entityTitle }}</h1>
+                                    </div>
+                                    {% block breadcrumbMessage %}{% endblock breadcrumbMessage %}
+                                {% endblock breadcrumbs %}
+                            </div>
+                            <div class="clearfix">
+                                <ul class="inline">
+                                    {% block stats %}
+                                        
+                                    {% endblock stats %}
+                                    {% if isMobileVersion() %}
+                                        {% set ownerLink = UI.entityOwnerLink(entity) %}
+                                        {% if ownerLink %}
+                                            <li>{{ ownerLink }}{% placeholder additional_owner_info with {entity: entity} %}</li>
+                                        {% endif %}
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {% endblock pageHeader %}
+                </div>
+                <div class="pull-right">
+                    <div class="pull-right title-buttons-container">
+                        {% block navButtonContainer %}
+                            {% placeholder view_navButtons_before with {entity: entity} %}
+                            {% block navButtons %}
+                            	{% if resource_granted('EDIT', 'entity:'~entity_class) %}
+							        {{ UI.editButton({
+							            'path': path('oro_entity_update', {entityName: entity_name, id: entity.id}),
+							            'entity_label': entity_config.get('label')|default('N/A')|trans
+							        }) }}
+							    {% endif %}
 
-    {{ parent() }}
-{% endblock pageHeader %}
+							    {{ UI.button({
+							    	'id': 'show-calendar', 
+							    	'path': '#',
+							    	'aCss': 'btn-primary',
+							    	'label': 'Показать календарь'
+							    }) }}
+							    
+                            {% endblock navButtons %}
+                            {% placeholder view_navButtons_after with {entity: entity} %}
+                        {% endblock navButtonContainer%}
+                    </div>
+                    <div class="pull-right user-info-state">
+                        <div class="inline-decorate-container">
+                            <ul class="inline-decorate">
+                                {% block pageActions %}
+                                    {% placeholder view_pageActions_before with {entity: entity} %}
 
-{% block stats %}
-{% endblock stats%}
+                                    {% if isDesktopVersion() %}
+                                        {% set ownerLink = UI.entityOwnerLink(entity) %}
+                                        {% if ownerLink %}
+                                            <li>{{ ownerLink }}{% placeholder additional_owner_info with {entity: entity} %}</li>
+                                        {% endif %}
+                                    {% endif %}
 
-{% block content_data %}
+                                    {% set audit_entity_id = audit_entity_id is defined ? audit_entity_id : entity.id|default %}
+                                    {% if audit_entity_id %}
+                                        {% placeholder change_history_block with {
+                                            'entity': entity,
+                                            'entity_class': audit_entity_class|default(null),
+                                            'id': audit_entity_id,
+                                            'title': audit_title|default(entity.__toString is defined ? entity : null),
+                                            'audit_path': audit_path|default('oro_dataaudit_history'),
+                                            'audit_show_change_history': audit_show_change_history|default(false)
+                                        } %}
+                                    {% endif %}
 
-	{%- set generalInfo -%}
+                                    {% placeholder view_pageActions_after with {entity: entity} %}
+                                {% endblock pageActions %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% placeholder page_title_after with {entity: entity} %}
+    </div>
+
+<div class="layout-content scrollable-container hide" style="padding-left: 8px;" id="cal">
+{%- set calendarInfo -%}
+		{% set connection = [{
+			'id': '0',
+			'targetCalendar': calendarCanvas.id,
+			'calendar': entity.calendar.id,
+			'position': 0,
+			'visible': true,
+			'calendarName': entity.calendar.name,
+			'removable': false,
+			'canAddEvent': false,
+			'canEditEvent': false,
+			'canDeleteEvent': false
+		}] %}
+		{% set calendarOptions = {
+            calendar: calendarCanvas.id,
+            calendarOptions: calendarOptions,
+            eventsItemsJson: render(path('nb_api_get_syscalendarevents', {calendar: calendarCanvas.id, start: startDate|date('c'), end: endDate|date('c'), subordinate: false, iso: entity.calendar.id})),
+            connectionsItemsJson: connection|json_encode,
+            date: 'now'|date('c'),
+            eventsOptions: {
+                'containerSelector': '.calendar-events',
+                'itemViewTemplateSelector': '#template-view-calendar-event',
+                'itemFormTemplateSelector': '#template-calendar-event',
+                'leftHeader': 'prev,next today title',
+                'centerHeader': '',
+                'rightHeader': 'month,agendaWeek,agendaDay',
+                'target': entity.calendar.id
+            },
+            connectionsOptions: {
+                'containerSelector': '.calendar-connections',
+                'containerTemplateSelector': '#template-calendar-connections',
+                'itemTemplateSelector': '#template-calendar-connection-item',
+            },
+            colorManagerOptions: {
+                colors: oro_config_value('oro_calendar.calendar_colors')
+            }
+        }%}
+    <div class="row-fluid" id="calendar"
+         data-page-component-module="nbcourt/js/app/components/calendar-component"
+         data-page-component-options="{{ calendarOptions | json_encode }}">
+        <div class="hide scrollable-container ">
+            <div class="calendars">
+                <div class="calendar-connections"></div>
+                <!--form action="#">
+                    {- form_row(user_select_form) }}
+                </form-->
+            </div>
+        </div>
+        <div class=" calendar-events scrollable-container"></div>
+    </div>
+    <script type="text/html" id="template-calendar-menu">
+        {{ oro_menu_render('calendar_menu') }}
+    </script>
+
+    <script type="text/html" id="template-calendar-connections">
+        <ul class="media-list connection-container">
+        </ul>
+    </script>
+
+    <script type="text/html" id="template-calendar-connection-item">
+        <li class="media connection-item<% if (visible) { %> active<% } %>" >
+            <span
+                <% if (visible) { %>
+                class="calendar-color"
+                    <% if (!_.isEmpty(backgroundColor)) { %>
+                    style="background-color: <%- backgroundColor %>; border-color: <%- backgroundColor %>"
+                    <% } %>
+                <% } else { %>
+                    class="calendar-color un-color"
+                <% } %>
+            ></span>
+            <div class="media-body">
+                <div class="user-calendar" title="<%- calendarName %>"><%- calendarName %></div>
+                <div class="pull-right icons-holder">
+                    <a href="javascript: void(0);" class="icons-holder-text no-hash context-menu-button">
+                        <i class="icon-ellipsis-horizontal"></i>
+                    </a>
+                </div>
+            </div>
+        </li>
+    </script>
+
+    {{ calendarTemplates.calendar_event_view_template('template-view-calendar-event') }}
+    {{ calendarTemplates.calendar_event_form_template('template-calendar-event', event_form) }}
+	{%- endset -%}
+	{{ calendarInfo }}
+</div>
+
+
+    <div class="layout-content scrollable-container" id="court-info">
+        {% block content_data %}
+        {%- set generalInfo -%}
 	{{ UI.renderProperty('Название дела', entity.name) }}
 	{{ UI.renderProperty('Номер дела', entity.number) }}
+	{{ UI.renderProperty('Открыто', entity.createdAt|oro_format_date) }}
 	{{ UI.renderHtmlProperty('Описание', entity.description|nl2br) }}
-	{{ UI.renderHtmlProperty('Исполнитель', entityConfig.formatDynamicFieldValue(
-											entity,
-											entity_class,
-											'owner',
-											entity.owner
-											)) }}
-	{{ UI.renderHtmlProperty('Ведущие юристы', entityConfig.formatDynamicFieldValue(
-											entity,
-											entity_class,
-											'owner',
-											entity.owner
-											)) }}
+	{%- set ownerData -%}
+		<a href="{{ path('oro_user_view', {'id': entity.owner.id}) }}">
+                            {{ entity.owner|oro_format_name|escape }}
+                        </a>
 	{%- endset -%}
+	
+		{% set uu = '' %}
+		{% for u in entity.users %}
+			{% if loop.first %}
+				{% set uu = uu ~ ',&nbsp;' %}
+			{% endif %}
+			{% set uu = uu ~ '<a href="' ~ path('oro_user_view', {'id': u.id}) ~ '">' ~ u|oro_format_name|escape ~ '</a>' %}
+			{% if not loop.last %}
+				{% set uu = uu ~ ',&nbsp;' %}
+			{% endif %}
+		{% endfor %}
+	{%- set clientData -%}
+                {%- if entity.client -%}
+                    {% if is_collaborate(entity.client, app.user) %}
+                        <a href="{{ path('oro_entity_view', {'id': entity.client.id, 'entityName' : 'Extend_Entity_client'}) }}">
+                            {{ entity.client.name }}
+                        </a>
+                    {% else %}
+                        {{ entity.client.name }}
+                    {% endif %}
+                {%- endif -%}
+                {%- endset -%}
+                {{ UI.renderHtmlProperty('Клиент', clientData) }}
+	{{ UI.renderHtmlProperty('Исполнители', ownerData ~ uu) }}
+	{{ UI.renderHtmlProperty('Участники процесса', entity.sides|nl2br) }}
+	{%- endset -%}
+
+	{%- set courtInfo -%}
+		{%- set courtData -%}
+		<a href="{{ path('oro_entity_view', {'id': entity.currentCourt.id, 'entityName': 'Extend_Entity_CourtInstance'}) }}">
+                            {{ entity.currentCourt.name }}
+                        </a>
+		{%- endset -%}
+		{{ UI.renderHtmlProperty('Суд', courtData) }}
+		<hr>
+		{{ UI.renderHtmlProperty('Результат', '<strong>' ~ entity.result ~ '</strong>') }}
+		<hr>
+		
+		{% set oldCourts = '' %}
+		{% if entity.oldCourts is not empty %}
+			{% set oldCourts = '<div class="list-group">' %}
+
+			{% for u in entity.oldCourts %}
+				
+				{% set oldCourts = oldCourts ~ '<a class="list-group-item" href="' ~ path('oro_entity_view', {'id': u.id}) ~ '">' ~ u.name ~ '</a>' %}
+				
+			{% endfor %}
+
+			{% set oldCourts = '</div>' %}
+			<div class="control-group"><h4>Предыдущие инстанции</h4>{{ oldCourts}}</div>
+		{% endif %}
+	{%- endset -%}
+
+	
 
     {% set data = { 'dataBlocks': [{
         'title': 'General'|trans,
@@ -60,8 +298,118 @@
         'subblocks': [{
             'title': 'General Information'|trans,
             'data':  [generalInfo]
-        }]
+        },{
+        	'title': 'Суд',
+        	'data': [courtInfo]
+    	}]
     }] } %}
 
-    {{ parent() }}
-{% endblock content_data %}
+            {% if data is defined and data.dataBlocks is defined %}
+                {% set dataBlocks = data.dataBlocks %}
+
+                {%- set activitiesData -%}
+                    {% placeholder view_content_data_activities with {entity: entity} %}
+                {%- endset -%}
+
+                {% if activitiesData is not empty %}
+                    {% set dataBlocks = dataBlocks|merge([{
+                        'title': 'oro.activity.sections.activities'|trans,
+                        'subblocks': [
+                            {
+                                'spanClass': 'empty',
+                                'data': [activitiesData]
+                            }
+                        ]
+                    }]) %}
+                {% endif %}
+
+                {%- set communicationsData -%}
+                    {% placeholder view_content_data_communications with {entity: entity} %}
+                {%- endset -%}
+
+                {% if communicationsData is not empty %}
+                    {% set dataBlocks = dataBlocks|merge([{
+                        'title': 'Communications'|trans,
+                        'subblocks': [
+                            {
+                                'spanClass': 'empty',
+                                'data': [communicationsData]
+                            }
+                        ]
+                    }]) %}
+                {% endif %}
+
+                {%- set additionalInformationData -%}
+                    {% placeholder view_content_data_additional_information with {entity: entity} %}
+                {%- endset -%}
+
+                {% if additionalInformationData is not empty %}
+                    {% set dataBlocks = dataBlocks|merge([{
+                        'title': 'Additional Information'|trans,
+                        'subblocks': [
+                            {
+                                'spanClass': 'empty',
+                                'data': [additionalInformationData]
+                            }
+                        ]
+                    }]) %}
+                {% endif %}
+
+                {%- set commentsData  -%}
+                    {% placeholder view_content_data_comments with {entity: entity} %}
+                {%- endset -%}
+
+                {% if commentsData is not empty %}
+                    {% set dataBlocks = dataBlocks|merge([{
+                        'title': 'oro.comment.entity_plural_label'|trans,
+                        'subblocks': [
+                            {
+                                'spanClass': 'responsive-cell activity-list-widget',
+                                'data': [commentsData]
+                            }
+                        ]
+                    }]) %}
+                {% endif  %}
+
+                {% set data = data|merge({'dataBlocks': dataBlocks}) %}
+            {% endif %}
+            {{ UI.scrollData(id, data) }}
+        {% endblock content_data %}
+    </div>
+
+    {% block navigation_content_tags %}
+        {# block added just for possibility to disable it in child templates if needed #}
+        {{ navigationMacro.navigationContentTags(entity) }}
+    {% endblock %}
+    <script type="text/javascript">
+							    require(['jquery'],function($){
+							    	$('#show-calendar').click(function(){
+							    		var active = $(this).hasClass('active');
+							    		
+							    		if(active){
+							    			var toHide = '#cal';
+							    			var toShow = '#court-info';
+							    			var text = 'Скрыть календарь';
+							    		}
+							    		else{
+							    			var toHide = '#court-info';
+							    			var toShow = '#cal';
+							    			var text = 'Показать календарь';
+							    		}
+							    		
+							    		$(toHide).fadeOut(300, function(){
+							    				if(!active){
+							    					//dirty hack bc screw fc api
+							    					$(toShow).show();
+							    					$('.fc-today-button').click();
+							    				} 
+							    				else
+							    					$(toShow).fadeIn(300);
+							    			});
+							    		$(this).toggleClass('active').text(text);
+							    		
+							    	});
+							    });
+							    </script>
+</div>
+{% endblock content %}
