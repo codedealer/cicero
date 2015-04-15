@@ -35,7 +35,7 @@ class DatagridListener
             return $router->generate(
                 $route,
                 [
-                    'entityName' => self::CLASS_NAME,
+                    'entityName' => str_replace('\\', '_', self::CLASS_NAME),
                     'id' => $record->getValue('id')
                 ]
             );

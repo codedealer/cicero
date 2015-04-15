@@ -69,13 +69,15 @@ class EntitiesController extends Controller implements InitializableControllerIn
     public function viewAction($entityName, $id)
     {
         $action = $this->get('nb.entity_action_mapper')->map($entityName, 'view');
-        if(false !== $action)
+        if(false !== $action){
             return $this->forward($action, [
                 'entityName' => $entityName,
                 'id' => $id
                 ]);
-        else
-            return parent::viewAction($entityName, $id);
+        }
+        
+        return parent::viewAction($entityName, $id);
+        
     }
 
     /**

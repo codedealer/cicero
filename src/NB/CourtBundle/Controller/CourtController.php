@@ -51,6 +51,7 @@ class CourtController extends Controller
         $calendarConfigProvider = $this->get('oro_calendar.provider.calendar_config');
         $dateRange = $calendarConfigProvider->getDateRange();
 
+        
         return $this->render('NBCourtBundle:Court:view.html.twig', [
         	'entity_name'   => $entityName,
             'entity'        => $record,
