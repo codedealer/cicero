@@ -11,10 +11,10 @@
                 </span>
                 <span class="visual">
                     <span class="details">
-                        'Судебное дело'
+                        Судебное дело
                         <% var template = (verb == 'create')
-                            ? {{ 'orocrm.task.created_by'|trans|json_encode|raw }}
-                            : {{ 'orocrm.task.changed_by'|trans|json_encode|raw }};
+                            ? {{ 'nb.court.feed.created_by'|trans|json_encode|raw }}
+                            : {{ 'nb.court.feed.changed_by'|trans|json_encode|raw }};
                         %>
                         <%= _.template(template, null, { interpolate: /\{\{(.+?)\}\}/g })({
                             user: '<a class="user" href="' + owner_url + '">' +  _.escape(owner) + '</a>',
