@@ -18,11 +18,19 @@ use NB\ReportBundle\Entity\WorkUnit;
  */
 class WorkUnitController extends Controller
 {
-    protected $redirectMap = [
-    	'extendentityregistration' => [
-    		'route' => 'oro_entity_view',
-    		'params' => ['entityName' => 'Extend_Entity_Registration']
-    	],
+    protected $routeMapCreator = [
+    	'extendentityregistration' => function($workunit){
+            return [
+            'route' => 'oro_entity_view',
+            'params' => ['entityName' => 'Extend_Entity_Registration', 'id' => $workunit->getRelatedEntityId()]
+            ]
+        },
+        'extendentitycourt' => function($workunit){
+            return [
+                'route' => 'nb_feed_create',
+                'params' => ['targetId' => $workunit->getId()]
+            ]
+        } ,
     ];
 
     /**
@@ -73,7 +81,6 @@ class WorkUnitController extends Controller
             		$related = true;
             		$workunit->setRelatedEntityId($relationData['id']);
             		$workunit->setRelatedEntityClass($relationData['class']);
- 					$redirect = $relationData['redirect'];
             	}
 
             	if($workunit->getStartDate() >= $workunit->getEndDate()){
@@ -97,17 +104,19 @@ class WorkUnitController extends Controller
 	                    ['route' => 'nb_workunit_update', 'parameters' => ['id'=> $id]],
 	                    ['route' => 'nb_workunit_view', 'parameters' => ['id' => $id]]
 	                );
-	            else
+	            else{
+                    $redirect = $this->createRedirect($workunit);
 	            	return $this->get('oro_ui.router')->redirectAfterSave(
 	                    [
 	                    	'route' => $redirect['route'], 
-	                    	'parameters' => array_merge(['id'=> $relationData['id']], $redirect['params'])
+	                    	'parameters' => $redirect['params']
 	                    ],
 	                    [
 	                    	'route' => $redirect['route'], 
-	                    	'parameters' => array_merge(['id'=> $relationData['id']], $redirect['params'])
+	                    	'parameters' => $redirect['params']
 	                    ]
 	                );
+                }
             }
         }
 
@@ -122,13 +131,20 @@ class WorkUnitController extends Controller
     protected function getRelationData($entity){
     	$relationId = $entity->getId();
     	$relationClass = ClassUtils::getClass($entity);
-    	$redirect = $this->redirectMap[str_replace('\\', '', strtolower($relationClass))];
+    	//$redirect = $this->redirectMap[str_replace('\\', '', strtolower($relationClass))];
 
     	return [
     		'id' => $relationId,
     		'class' => $relationClass,
-    		'redirect' => $redirect
     		];
+    }
+
+    protected function createRedirect($workunit){
+        $normilizedName = str_replace('\\', '', strtolower($workunit->getRelatedEntityClass()));
+
+        $callable = $this->routeMapCreator[$normilizedName];
+
+        return $callable($workunit);
     }
 
     /**
