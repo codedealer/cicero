@@ -1,24 +1,6 @@
-{{ UI.clientButton({
-    'dataUrl': path('nb_feed_create', {'targetId': entity.id}),
-    'aCss': 'no-hash',
-    'iCss': 'icon-list-alt',
-    'dataId': entity.id,
-    'label': 'Обновить дело',
-    'title': 'Добавить обновление в ленту',
-    'widget' : {
-        'type' : 'dialog',
-        'multiple' : true,
-        'refresh-widget-alias': 'activity-list-widget',
-        'options' : {
-            'alias': 'feed-dialog',
-            'dialogOptions' : {
-                'title' : 'Обновить дело',
-                'allowMaximize': true,
-                'allowMinimize': true,
-                'dblclick': 'maximize',
-                'maximizedHeightDecreaseBy': 'minimize-bar',
-                'width': 1000
-            }
-        }
-    }
-}) }}
+{{ UI.button({
+        'path': path('nb_feed_create', {'targetId': entity.id}),
+        'label': 'Обновить дело',
+        'title': 'Добавить обновление в ленту',
+        'iCss': 'icon-legal'
+    }) }}
