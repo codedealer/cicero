@@ -4,7 +4,6 @@ NB\ReportBundle\Entity\WorkUnit:
             - NotBlank: ~
             - DateTime: ~
         endDate:
-            - NotBlank: ~
             - DateTime: ~
         worktype:
             - NotBlank: ~

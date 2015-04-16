@@ -18,7 +18,7 @@ class WorkUnitType extends AbstractType
 		$builder
 			->add('subject', 'text', ['required' => false, 'label' => 'Комментарий'])
 			->add('startDate', 'oro_datetime', ['required' => true, 'label' => 'Начало'])
-			->add('endDate', 'oro_datetime', ['required' => true, 'label' => 'Конец'])
+			->add('endDate', 'oro_datetime', ['required' => false, 'label' => 'Конец'])
 			->add('worktype', 'translatable_entity', [
 					'required' => true,
 					'class' => '\Extend\Entity\worktype',

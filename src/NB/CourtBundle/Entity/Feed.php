@@ -5,6 +5,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
+use Oro\Bundle\OrganizationBundle\Entity\Organization;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 
@@ -70,7 +71,7 @@ class Feed extends ExtendFeed
     protected $subject = null;
 
     /**
-     * @ORM\Column(type="text", name="description")
+     * @ORM\Column(type="text", name="description", nullable=true)
      */
     protected $description = '';
     

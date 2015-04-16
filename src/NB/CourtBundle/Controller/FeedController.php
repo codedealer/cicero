@@ -35,8 +35,25 @@ class FeedController extends Controller
     {
         $feed = new Feed();
 
-        $form = $this->createForm('nb_feed_form', $feed);
         $request = $this->getRequest();
+        $em = $this->getDoctrine()->getManager();
+
+        $refId = $request->get('ref', false);
+        if($refId){
+        	//prepopulate subject field
+        	try{
+        		$workunit = $this->getDoctrine()->getRepository('NBReportBundle:WorkUnit')->find($refId);
+        	}
+        	catch(\Exception $e){
+        		$refId = false;
+        	}
+        	if($refId)
+        		$feed->setSubject($workunit->getSubject());
+        }
+
+
+        $form = $this->createForm('nb_feed_form', $feed);
+        
 
         if ($request->getMethod() == 'POST'){
         	$form->submit($request);
@@ -44,7 +61,7 @@ class FeedController extends Controller
             if ($form->isValid()) {
             	$routingHelper = $this->get('oro_entity.routing_helper');
             	$court = $routingHelper->getEntity(self::TARGET_NAME, $targetId);
-            	$em = $this->getDoctrine()->getManager();
+            	
 
             	$this->get('oro_activity.manager')->addActivityTarget(
             		$feed,
@@ -78,8 +95,8 @@ class FeedController extends Controller
             	}
 
             	$security = $this->get('oro_security.security_facade');
-            	$feed->setOwner($security->getLoggedUser());
-            	$feed->setOrganization($security->getOrganization());
+            	//$feed->setOwner($security->getLoggedUser());
+            	//$feed->setOrganization($security->getOrganization());
 
             	$em->persist($feed);
             	$em->flush();
@@ -91,8 +108,7 @@ class FeedController extends Controller
             	);
             }
         }
-
-        return [
+        $templateArray = [
         	'entity' => $feed,
         	'targetId' => $targetId,
         	'targetName' => self::TARGET_NAME,
@@ -100,6 +116,11 @@ class FeedController extends Controller
         	'formAction' => $this->get('router')
             ->generate('nb_feed_create', ['targetId' => $targetId])
         ];
+
+        if($refId)
+        	$templateArray['ref'] = $refId;
+
+        return $templateArray;
     }
 
     /**

@@ -3,13 +3,12 @@
 {% set entityId = entity.id ? entity.id : false %}
 
 {% block navButtons %}
-
-    {{ UI.cancelButton(path('nb_workunit_index')) }}
-    {{ UI.button({
-        'path':path('oro_entity_view', {'id': targetId, 'entityName': targetName}),
-        'label': 'Сохранить',
-        'aCss': 'btn-success'
-    }) }}
+    {% if ref is defined %}
+        {{ UI.cancelButton(path('nb_workunit_index')) }}
+    {% else %}
+        {{ UI.cancelButton(path('oro_entity_view', {'id': targetId, 'entityName': 'Extend_Entity_Court'})) }}
+    {% endif %}
+    {{ UI.saveAndStayButton() }}
 {% endblock navButtons %}
 
 {% block pageHeader %}

@@ -5,7 +5,7 @@
 {% block navButtons %}
     {% set html = UI.saveAndCloseButton() %}
     {% if resource_granted('nb_workunit_update') %}
-        {% set html = html ~ UI.saveAndStayButton() %}
+        {% set html = html ~ UI.saveAndStayButton('Сохранить и создать новое') %}
     {% endif %}
     {{ UI.dropdownSaveButton({'html': html}) }}
     {{ UI.cancelButton(path('nb_workunit_index')) }}

@@ -56,8 +56,26 @@ class WorkUnitController extends Controller
     {
         $workunit = new WorkUnit();
 
-        $form = $this->createForm('nb_workunit_relation_form', $workunit);
         $request = $this->getRequest();
+        $em = $this->getDoctrine()->getManager();
+
+        $refId = $request->get('ref', false);
+        if($refId){
+            //prepopulate
+            try{
+                $_workunit = $this->getDoctrine()->getRepository('NBReportBundle:WorkUnit')->find($refId);
+            }
+            catch(\Exception $e){
+                $refId = false;
+            }
+            if($refId){
+                $workunit->setStartDate($_workunit->getEndDate());
+                $workunit->setClient($_workunit->getClient());
+            }
+        }
+
+        $form = $this->createForm('nb_workunit_relation_form', $workunit);
+        
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
             
@@ -71,12 +89,13 @@ class WorkUnitController extends Controller
             		$workunit->setRelatedEntityClass($relationData['class']);
             	}
 
-            	if($workunit->getStartDate() >= $workunit->getEndDate()){
+            	if(!($workunit->getEndDate() instanceof \DateTime)
+                   || ($workunit->getStartDate() >= $workunit->getEndDate())){
             		$correctEndDate = clone $workunit->getStartDate();
             		$workunit->setEndDate($correctEndDate->modify('+1 hour'));
             	}
 
-            	$em = $this->getDoctrine()->getManager();
+            	
             	$em->persist($workunit);
             	$em->flush();
 
@@ -89,7 +108,7 @@ class WorkUnitController extends Controller
 
             	if(!$related)
 	                return $this->get('oro_ui.router')->redirectAfterSave(
-	                    ['route' => 'nb_workunit_update', 'parameters' => ['id'=> $id]],
+	                    ['route' => 'nb_workunit_create', 'parameters' => ['ref'=> $id]],
 	                    ['route' => 'nb_workunit_view', 'parameters' => ['id' => $id]]
 	                );
 	            else{
@@ -143,7 +162,7 @@ class WorkUnitController extends Controller
             case 'extendentitycourt':
                 $redirect = [
                     'route' => 'nb_feed_create',
-                    'params' => ['targetId' => $workunit->getRelatedEntityId()]
+                    'params' => ['targetId' => $workunit->getRelatedEntityId(), 'ref' => $workunit->getId()]
                 ];
                 break;
             default:
@@ -200,10 +219,11 @@ class WorkUnitController extends Controller
             $form->submit($request);
             
             if ($form->isValid()) {
-            	if($workunit->getStartDate() >= $workunit->getEndDate()){
-            		$correctEndDate = clone $workunit->getStartDate();
-            		$workunit->setEndDate($correctEndDate->modify('+1 hour'));
-            	}
+            	if(!($workunit->getEndDate() instanceof \DateTime)
+                   || ($workunit->getStartDate() >= $workunit->getEndDate())){
+                    $correctEndDate = clone $workunit->getStartDate();
+                    $workunit->setEndDate($correctEndDate->modify('+1 hour'));
+                }
        
             	$em->persist($workunit);
             	$em->flush();
