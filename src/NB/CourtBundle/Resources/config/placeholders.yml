@@ -1,0 +1,6 @@
+items:
+    nb_add_feed_button:
+        template: NBCourtBundle:Feed:activityButton.html.twig
+
+    nb_add_feed_link:
+        template: NBCourtBundle:Feed:activityLink.html.twig

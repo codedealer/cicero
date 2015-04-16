@@ -1,0 +1,6 @@
+NB\CourtBundle\Entity\Feed:
+    properties:
+        subject:
+            - NotBlank: ~
+            - Length:
+                max: 255

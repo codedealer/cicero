@@ -1,6 +1,17 @@
-
+nb_court_feed_bundle:
+    resource:     "@NBCourtBundle/Controller/FeedController.php"
+    type:         annotation
+    prefix:       /
 nb_court_bundle_api:
     resource:     "@NBCourtBundle/Controller/Api/Rest/SysCalendarEventController.php"
+    type:         rest
+    prefix:       api/rest/{version}
+    requirements:
+        version:  latest|v1
+    defaults:
+        version:  latest
+nb_court_feed_bundle_api:
+    resource:     "@NBCourtBundle/Controller/Api/Rest/FeedController.php"
     type:         rest
     prefix:       api/rest/{version}
     requirements:

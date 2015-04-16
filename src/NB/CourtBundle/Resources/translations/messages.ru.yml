@@ -1,0 +1,7 @@
+nb:
+  court:
+    feed:
+      entity_label: Обновление дела
+      entity_plural_label: Обновления судебных дел
+      created_by:  обновлено {{ user }} в {{ date }}
+      changed_by:  обновлено {{ editor }} в {{ editor_date }}

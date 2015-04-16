@@ -22,6 +22,16 @@ services:
         - [ initDoctrinePropertiesByManagerRegistry, ["@doctrine"]]
       tags:
         - { name: oro_form.autocomplete.search_handler, alias: registrations }
+  court_search_handler:
+      class: NB\CoreBundle\Autocomplete\LightSearchHandler
+      arguments:
+        - Extend\Entity\Court
+        - ["name", "number"]
+        - @security.context
+      calls:
+        - [ initDoctrinePropertiesByManagerRegistry, ["@doctrine"]]
+      tags:
+        - { name: oro_form.autocomplete.search_handler, alias: courts }
   nb_workunit.form.api:
         class: Symfony\Component\Form\Form
         factory_method: createNamed

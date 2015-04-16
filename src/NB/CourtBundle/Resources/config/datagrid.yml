@@ -115,3 +115,52 @@ datagrid:
         options:
             entity_pagination: true
             skip_acl_check: true
+
+    activity-feed-grid:
+        source:
+            type: orm
+            query:
+                select:
+                    - feed.id
+                    - feed.subject
+                    - feed.updatedAt
+                    - CONCAT(owner.firstName, CONCAT(' ', owner.lastName)) as ownerName
+                    - owner.id as ownerId
+                from:
+                    - { table: NB\CourtBundle\Entity\Feed, alias: feed }
+                join:
+                    left:
+                        - { join: feed.owner, alias: owner }
+        columns:
+            subject:
+                label:         Тема
+            ownerName:
+                label:         Пользователь
+            updatedAt:
+                label:         Обновлено
+                frontend_type: datetime
+        sorters:
+            columns:
+                subject:
+                    data_name: feed.subject
+                updatedAt:
+                    data_name: feed.updatedAt
+                ownerName:
+                    data_name: ownerName
+            default:
+                updatedAt: ASC
+        filters:
+            columns:
+                subject:
+                    type:      string
+                    data_name: feed.subject
+                updatedAt:
+                    type:      datetime
+                    data_name: feed.updatedAt
+                ownerName:
+                    type:      string
+                    data_name: ownerName
+        properties:
+            id: ~
+        options:
+            skip_acl_check: true

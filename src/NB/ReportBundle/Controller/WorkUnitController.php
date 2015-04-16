@@ -18,20 +18,8 @@ use NB\ReportBundle\Entity\WorkUnit;
  */
 class WorkUnitController extends Controller
 {
-    protected $routeMapCreator = [
-    	'extendentityregistration' => function($workunit){
-            return [
-            'route' => 'oro_entity_view',
-            'params' => ['entityName' => 'Extend_Entity_Registration', 'id' => $workunit->getRelatedEntityId()]
-            ]
-        },
-        'extendentitycourt' => function($workunit){
-            return [
-                'route' => 'nb_feed_create',
-                'params' => ['targetId' => $workunit->getId()]
-            ]
-        } ,
-    ];
+    /*TODO: refactor that
+    */
 
     /**
      * @Route(
@@ -141,10 +129,29 @@ class WorkUnitController extends Controller
 
     protected function createRedirect($workunit){
         $normilizedName = str_replace('\\', '', strtolower($workunit->getRelatedEntityClass()));
+        $redirect = [];
+        switch ($normilizedName) {
+            case 'extendentityregistration':
+                $redirect = [
+                    'route' => 'oro_entity_view',
+                    'params' => ['
+                        entityName' => 'Extend_Entity_Registration', 
+                        'id' => $workunit->getRelatedEntityId()
+                        ]
+                    ];
+                break;
+            case 'extendentitycourt':
+                $redirect = [
+                    'route' => 'nb_feed_create',
+                    'params' => ['targetId' => $workunit->getRelatedEntityId()]
+                ];
+                break;
+            default:
+                throw new \RuntimeException('WorkUnit hook for '. $normilizedName . ' not implemented');
+                break;
+        }
 
-        $callable = $this->routeMapCreator[$normilizedName];
-
-        return $callable($workunit);
+        return $redirect;
     }
 
     /**

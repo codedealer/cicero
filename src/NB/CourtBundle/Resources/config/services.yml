@@ -11,3 +11,13 @@ services:
       class: NB\CourtBundle\EventListener\CourtDoctrineSubscriber
       tags:
         - { name: doctrine.event_subscriber }
+  nb.form.type.feed:
+    class: NB\CourtBundle\Form\Type\FeedType
+    tags:
+      - { name: form.type, alias: nb_feed_form }
+  nb_court.activity_list.provider:
+    class: NB\CourtBundle\Provider\FeedActivityListProvider
+    arguments:
+       - @oro_entity.doctrine_helper
+    tags:
+       - {name: oro_activity_list.provider, priority: 10}

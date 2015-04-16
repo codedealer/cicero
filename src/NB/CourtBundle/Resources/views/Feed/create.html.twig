@@ -1,0 +1,63 @@
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+{% oro_title_set({params : {"%entity.subject%": entity.subject, "%entityName%": 'Обновление'|trans }}) %}
+{% set entityId = entity.id ? entity.id : false %}
+
+{% block navButtons %}
+
+    {{ UI.cancelButton(path('nb_workunit_index')) }}
+    {{ UI.button({
+        'path':path('oro_entity_view', {'id': targetId, 'entityName': targetName}),
+        'label': 'Сохранить',
+        'aCss': 'btn-success'
+    }) }}
+{% endblock navButtons %}
+
+{% block pageHeader %}
+        {% set title = 'Обновить информацию по делу' %}
+        {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% set id = 'feed-form' %}
+
+    {%- set invisibleRows -%}
+    <div id="ev" class="hide">
+        <p class="text-info">При привязке к дате обновление появится в календаре судебного дела</p>
+        {{form_row(form.start)}}
+        {{form_row(form.end)}}
+        {{form_row(form.allDay)}}
+    </div>
+    <script type="text/javascript">
+    require(['jquery'],function($){
+        $('#nb_feed_form_createEvent').change(function(){
+                $('#ev').slideToggle();
+        });
+        
+    });
+    </script>
+    {%- endset -%}
+
+    {% set dataBlocks = [{
+        'title': 'General Information'|trans,
+        'class': 'active',
+        'subblocks': [
+            {
+                'title': '',
+                'data': [
+                    form_row(form.subject),
+                    form_row(form.description),
+                    form_row(form.createEvent),
+                    form_row(form.targetId, {'value': targetId }),
+                    invisibleRows
+                ]
+            }
+        ]
+    }] %}
+    
+
+    {% set data = {
+        'formErrors': form_errors(form)? form_errors(form) : null,
+        'dataBlocks': dataBlocks,
+    } %}
+    {{ parent() }}
+{% endblock content_data %}

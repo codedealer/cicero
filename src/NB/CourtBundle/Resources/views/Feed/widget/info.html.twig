@@ -1,0 +1,9 @@
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+
+<div class="widget-content form-horizontal box-content row-fluid">
+    <div class="responsive-block">
+        {{ UI.renderProperty('Тема'|trans, entity.subject) }}
+        {{ UI.renderHtmlProperty('Описание'|trans, entity.description|nl2br) }}
+        {{ UI.renderProperty('Дата обновления'|trans, entity.createdAt|oro_format_datetime) }}
+    </div>
+</div>
