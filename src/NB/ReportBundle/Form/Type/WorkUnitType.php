@@ -5,6 +5,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+use NB\ReportBundle\Model\ContractContainer;
+
 class WorkUnitType extends AbstractType
 {
 	protected $securityFacade; 
@@ -17,6 +19,15 @@ class WorkUnitType extends AbstractType
 		
 		$builder
 			->add('subject', 'text', ['required' => false, 'label' => 'Комментарий'])
+			->add('contract', 'choice', [
+				'required' => true,
+				'choices'  => [
+							ContractContainer::MONTHLY => ContractContainer::label(ContractContainer::MONTHLY),
+							ContractContainer::HOURLY => ContractContainer::label(ContractContainer::HOURLY),
+							ContractContainer::PROJECT => ContractContainer::label(ContractContainer::PROJECT)
+							],
+				'label'	   => 'Договор'
+			])
 			->add('startDate', 'oro_datetime', ['required' => true, 'label' => 'Начало'])
 			->add('endDate', 'oro_datetime', ['required' => false, 'label' => 'Конец'])
 			->add('worktype', 'translatable_entity', [

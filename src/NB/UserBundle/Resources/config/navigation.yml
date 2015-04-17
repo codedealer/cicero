@@ -61,6 +61,10 @@ oro_menu_config:
     activities_tab:
       extras:
         position: 1
+    reports_tab:
+      label: 'Отчеты'
+      extras:
+        position: 4
   tree:
     application_menu:
       children:
@@ -74,8 +78,9 @@ oro_menu_config:
             project: ~
             court: ~
             courtinstance: ~
+        reports_tab:
+          merge_strategy: replace
         system_tab:
-          merge_strategy: move
           children:
             users_management:
               children:
