@@ -41,6 +41,8 @@ oro_menu_config:
     clients_tab:
       label: 'Клиенты'
       uri: '#'
+      extras:
+        position: 3
     clients:
       label: 'Клиенты'
       route: 'oro_entity_index'
@@ -48,12 +50,24 @@ oro_menu_config:
         entityName: 'Extend_Entity_client'
       extras:
         routes: ['/^Extend_Entity_client/']
+    table_calendar:
+      label: 'Табель Календарь'
+      uri: '#'
+      extras:
+        position: 2
+    system_tab:
+      extras:
+        position: 170
+    activities_tab:
+      extras:
+        position: 1
   tree:
     application_menu:
       children:
         clients_tab:
           children:
             clients: ~
+        table_calendar:
         activities_tab:
           children:
             registration: ~
@@ -61,6 +75,7 @@ oro_menu_config:
             court: ~
             courtinstance: ~
         system_tab:
+          merge_strategy: move
           children:
             users_management:
               children:
