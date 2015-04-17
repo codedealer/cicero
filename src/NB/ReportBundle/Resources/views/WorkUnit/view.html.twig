@@ -43,6 +43,7 @@
                 {{ UI.renderProperty('Начало', entity.startDate|oro_format_datetime) }}
                 {{ UI.renderProperty('Конец', entity.endDate|oro_format_datetime) }}
                 {{ UI.renderProperty('Тип работы', entity.worktype.name|default('N/A')) }}
+                {{ UI.renderProperty('Договор', contract_transform(entity.contract)) }}
 
                 {%- set ownerData -%}
                 {%- if entity.owner -%}

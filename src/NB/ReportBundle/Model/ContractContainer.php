@@ -13,8 +13,8 @@ class ContractContainer
 		self::PROJECT => ['label' => 'Проект'],
 	];
 
-	public static function has($value){
-		return array_key_exists($value, $info);
+	public static function has( $value){
+		return array_key_exists($value, self::$info);
 	}
 
 	public static function datagridLabel(){

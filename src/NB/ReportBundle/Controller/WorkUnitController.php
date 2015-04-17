@@ -113,14 +113,15 @@ class WorkUnitController extends Controller
 	                );
 	            else{
                     $redirect = $this->createRedirect($workunit);
+
 	            	return $this->get('oro_ui.router')->redirectAfterSave(
 	                    [
-	                    	'route' => $redirect['route'], 
-	                    	'parameters' => $redirect['params']
+	                    	'route' => $redirect[0]['route'], 
+	                    	'parameters' => $redirect[0]['params']
 	                    ],
 	                    [
-	                    	'route' => $redirect['route'], 
-	                    	'parameters' => $redirect['params']
+	                    	'route' => $redirect[1]['route'], 
+	                    	'parameters' => $redirect[1]['params']
 	                    ]
 	                );
                 }
@@ -151,18 +152,42 @@ class WorkUnitController extends Controller
         $redirect = [];
         switch ($normilizedName) {
             case 'extendentityregistration':
-                $redirect = [
+                $redirect = [0=>[
                     'route' => 'oro_entity_view',
                     'params' => ['
                         entityName' => 'Extend_Entity_Registration', 
                         'id' => $workunit->getRelatedEntityId()
                         ]
+                        ],
+                        1=>[
+                    'route' => 'oro_entity_view',
+                    'params' => ['
+                        entityName' => 'Extend_Entity_Registration', 
+                        'id' => $workunit->getRelatedEntityId()
+                        ]
+                        ]
                     ];
                 break;
             case 'extendentitycourt':
-                $redirect = [
+                $redirect = [0=>[
                     'route' => 'nb_feed_create',
                     'params' => ['targetId' => $workunit->getRelatedEntityId(), 'ref' => $workunit->getId()]
+                    ],
+                    1=>[
+                    'route' => 'nb_feed_create',
+                    'params' => ['targetId' => $workunit->getRelatedEntityId(), 'ref' => $workunit->getId()]
+                    ],
+                ];
+                break;
+            case 'extendentityproject':
+                $redirect = [0=>[
+                    'route' => 'nb_workunit_create',
+                    'params' => ['ref' => $workunit->getId()]
+                    ],
+                    1=>[
+                    'route' => 'nb_workunit_index',
+                    'params' => []
+                    ],
                 ];
                 break;
             default:
