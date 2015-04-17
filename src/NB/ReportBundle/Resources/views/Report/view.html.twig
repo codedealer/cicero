@@ -1,0 +1,14 @@
+{% extends 'OroUIBundle:actions:index.html.twig' %}
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+{% set gridName = grid_name %}
+{% set params = { 'clientId' : client, 'contract': report_id} %}
+{% set pageTitle = report_info.report %}
+
+{% block navButtons %}
+    {# if resource_granted('oro_report_create') %}
+        {{ UI.addButton({
+            'path' : path('nb_report_view', {'id':}),
+            'entity_label': 'Сформировать отчет'
+        }) }}
+    {% endif %#}
+{% endblock %}

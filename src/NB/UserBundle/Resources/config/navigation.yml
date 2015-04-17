@@ -53,6 +53,7 @@ oro_menu_config:
     table_calendar:
       label: 'Табель Календарь'
       uri: '#'
+      aclResourceId: oro_system_calendar_view
       extras:
         position: 2
     system_tab:
@@ -63,8 +64,14 @@ oro_menu_config:
         position: 1
     reports_tab:
       label: 'Отчеты'
+      aclResourceId: oro_report_create
       extras:
         position: 4
+    month_report:
+      label: 'Ежемесячный отчет'
+      route: 'nb_report_index'
+      routeParameters:
+        id: 1
   tree:
     application_menu:
       children:
@@ -80,6 +87,8 @@ oro_menu_config:
             courtinstance: ~
         reports_tab:
           merge_strategy: replace
+          children:
+            month_report: ~
         system_tab:
           children:
             users_management:

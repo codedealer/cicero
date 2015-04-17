@@ -74,3 +74,9 @@ services:
             - @translator
         tags:
           - { name: oro_calendar.calendar_provider, alias: work }
+  nb_report.event_listener.month_datagrid:
+        class: NB\ReportBundle\EventListener\ReportDatagridListener
+        arguments:
+            - @logger
+        tags:
+            - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after.grid-report-monthly, method: onBuildAfter }

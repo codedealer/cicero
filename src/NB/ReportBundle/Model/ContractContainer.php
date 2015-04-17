@@ -8,9 +8,9 @@ class ContractContainer
 	const PROJECT = 3;
 
 	protected static $info = [
-		self::MONTHLY => ['label' => 'Абонентский договор'],
-		self::HOURLY => ['label' => 'Почасовая оплата'],
-		self::PROJECT => ['label' => 'Проект'],
+		self::MONTHLY => ['label' => 'Абонентский договор', 'report' => 'Отчет по абонентскому договору'],
+		self::HOURLY => ['label' => 'Почасовая оплата', 'report' => 'Отчет по выполненной работе'],
+		self::PROJECT => ['label' => 'Проект', 'report' => 'Отчет по проекту'],
 	];
 
 	public static function has( $value){
@@ -27,5 +27,10 @@ class ContractContainer
 	public static function label($value){
 		$ar = self::$info;
 		return $ar[$value]['label'];
+	}
+
+	public static function info($value){
+		$ar = self::$info;
+		return $ar[$value];
 	}
 }
