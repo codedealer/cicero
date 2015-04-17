@@ -11,6 +11,7 @@ datagrid:
                     - workunit.startDate
                     - workunit.endDate
                     - worktype.name as worktypeName
+                    - workunit.contract
                     - client.name as clientName
                     - CONCAT(owner.firstName, CONCAT(' ', owner.lastName)) as ownerName
                     - owner.id as ownerId
@@ -30,6 +31,10 @@ datagrid:
                 frontend_type:          datetime
             worktypeName:
                 label:         Тип работы
+            contract:
+                label:         Договор
+                type:          callback
+                callable:      NB\ReportBundle\Model\ContractContainer::datagridLabel
             subject:
                 label:         nb.wu.subject.label
             ownerName:
@@ -44,10 +49,14 @@ datagrid:
                     data_name: workunit.endDate
                 worktypeName:
                     data_name: worktypeName
+                contract:
+                    data_name: contract
                 ownerName:
                     data_name: ownerName
                 clientName:
                     data_name: clientName
+                contract:
+                    data_name: contract
             default:
                 startDate: ASC
         filters:
@@ -58,9 +67,6 @@ datagrid:
                 endDate:
                     type: datetime
                     data_name: workunit.endDate
-                subject:
-                    type:      string
-                    data_name: workunit.subject
                 worktypeName:
                     type:      string
                     data_name: worktypeName

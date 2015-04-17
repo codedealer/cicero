@@ -12,6 +12,8 @@ use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\WorkflowBundle\Entity\WorkflowItem;
 use Oro\Bundle\WorkflowBundle\Entity\WorkflowStep;
 
+use NB\ReportBundle\Model\Contract;
+
 /**
  * @ORM\Entity
  * @ORM\Table(
@@ -115,6 +117,10 @@ class WorkUnit
      */
     protected $relatedEntityId = null;
     
+    /**
+     * @ORM\Column(type="integer", name="contract", unique=false, nullable=false)
+     */
+    protected $contract = 1;
     
     
 
@@ -346,5 +352,17 @@ class WorkUnit
     public function getRelatedEntityId()
     {
         return $this->relatedEntityId;
+    }
+
+    public function getContract(){
+        return $this->contract;
+    }
+
+    public function setContract($value){
+        if(ContractContainer::has($value))
+            $this->contract = $value;
+        else
+            $this->contract = 1;
+        return $this;
     }
 }
