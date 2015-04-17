@@ -1,0 +1,5 @@
+css:
+    'nbcourt':
+        - 'bundles/nbcourt/css/calendar.css'
+        - 'bundles/nbcourt/css/less/print.less'
+        - 'bundles/nbcourt/lib/fullcalendar/fullcalendar.css'

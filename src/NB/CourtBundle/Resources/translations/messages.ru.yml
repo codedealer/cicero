@@ -5,3 +5,5 @@ nb:
       entity_plural_label: Обновления судебных дел
       created_by:  обновлено {{ user }} в {{ date }}
       changed_by:  обновлено {{ editor }} в {{ editor_date }}
+      owner:
+        label: Владелец

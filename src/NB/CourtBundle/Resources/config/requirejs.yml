@@ -1,0 +1,14 @@
+config:
+    paths:
+        'jquery.fullcalendar': 'bundles/orocalendar/lib/fullcalendar/fullcalendar.js'
+        'nbcourt/js/calendar-view': 'bundles/nbcourt/js/calendar-view.js'
+        'nbcourt/js/calendar/connection/collection': 'bundles/nbcourt/js/calendar/connection/collection.js'
+        'nbcourt/js/calendar/connection/model': 'bundles/nbcourt/js/calendar/connection/model.js'
+        'nbcourt/js/calendar/connection/view': 'bundles/nbcourt/js/calendar/connection/view.js'
+        'nbcourt/js/calendar/event/collection': 'bundles/nbcourt/js/calendar/event/collection.js'
+        'nbcourt/js/calendar/event/model': 'bundles/nbcourt/js/calendar/event/model.js'
+        'nbcourt/js/calendar/event/view': 'bundles/nbcourt/js/calendar/event/view.js'
+        'nbcourt/js/form-validation': 'bundles/nbcourt/js/form-validation.js'
+        'nbcourt/js/calendar/color-manager': 'bundles/nbcourt/js/calendar/color-manager.js'
+        'nbcourt/js/app/views/change-status-view': 'bundles/nbcourt/js/app/views/change-status-view.js'
+        'nbcourt/js/app/views/guest-notifier-view': 'bundles/nbcourt/js/app/views/guest-notifier-view.js'
