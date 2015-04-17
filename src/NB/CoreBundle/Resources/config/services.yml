@@ -20,7 +20,7 @@ services:
         -  @oro_security.acl_helper
       tags:
         - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after.custom-entity-grid, method: onBuildAfter, priority: -255 }
-        - { name: kernel.event_listener, event: oro_datagrid.datagrid.result.before.custom-entity-grid, method: onResultBefore }
+        - { name: kernel.event_listener, event: oro_datagrid.orm_datasource.result.before.custom-entity-grid, method: onResultBefore }
     nb.collab_twig_exntension:
       class: NB\CoreBundle\Twig\CollaborationExtension
       public: false
