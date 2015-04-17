@@ -12,7 +12,7 @@ use Oro\Bundle\UserBundle\Entity\User;
 use Oro\Bundle\WorkflowBundle\Entity\WorkflowItem;
 use Oro\Bundle\WorkflowBundle\Entity\WorkflowStep;
 
-use NB\ReportBundle\Model\Contract;
+use NB\ReportBundle\Model\ContractContainer;
 
 /**
  * @ORM\Entity

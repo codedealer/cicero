@@ -1,0 +1,35 @@
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+{% oro_title_set({params : {"%entity.subject%": 'Выбрать клиента для отчета', "%entityName%": '' }}) %}
+
+
+{% block navButtons %}
+    {{ UI.saveAndCloseButton('Выбрать клиента') }}
+    {{ UI.cancelButton(path('nb_workunit_index')) }}
+{% endblock navButtons %}
+
+{% block pageHeader %}
+        {% set title = report_info.report %}
+        {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% set id = 'client-choice-form' %}
+    {% set dataBlocks = [{
+        'title': 'Клиент',
+        'class': 'active',
+        'subblocks': [
+            {
+                'title': '',
+                'data': [
+                    form_row(form.client)
+                ]
+            }
+        ]
+    }] %}
+
+    {% set data = {
+        'formErrors': form_errors(form)? form_errors(form) : null,
+        'dataBlocks': dataBlocks,
+    } %}
+    {{ parent() }}
+{% endblock content_data %}

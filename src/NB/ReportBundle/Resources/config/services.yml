@@ -32,6 +32,16 @@ services:
         - [ initDoctrinePropertiesByManagerRegistry, ["@doctrine"]]
       tags:
         - { name: oro_form.autocomplete.search_handler, alias: courts }
+  project_search_handler:
+      class: NB\CoreBundle\Autocomplete\LightSearchHandler
+      arguments:
+        - Extend\Entity\Project
+        - ["name"]
+        - @security.context
+      calls:
+        - [ initDoctrinePropertiesByManagerRegistry, ["@doctrine"]]
+      tags:
+        - { name: oro_form.autocomplete.search_handler, alias: projects }
   nb_workunit.form.api:
         class: Symfony\Component\Form\Form
         factory_method: createNamed
@@ -64,3 +74,9 @@ services:
             - @translator
         tags:
           - { name: oro_calendar.calendar_provider, alias: work }
+  nb_report.event_listener.month_datagrid:
+        class: NB\ReportBundle\EventListener\ReportDatagridListener
+        arguments:
+            - @logger
+        tags:
+            - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after.grid-report-monthly, method: onBuildAfter }

@@ -17,7 +17,8 @@ class WorkUnitRelationType extends WorkUnitType
 				'empty_value' => 'Выбрать сущность...',
 				'choices' => [
 					'registration' => 'Регистрация',
-					'court'		   => 'Судебное дело'
+					'court'		   => 'Судебное дело',
+					'project'	   => 'Проект'
 				]
 			])
 			->add('registration', 'oro_jqueryselect2_hidden', [
@@ -29,6 +30,11 @@ class WorkUnitRelationType extends WorkUnitType
 			'autocomplete_alias' => 'courts',
 			'mapped' => false,
 			'label' => 'Судебное дело'
+			])
+			->add('project', 'oro_jqueryselect2_hidden', [
+			'autocomplete_alias' => 'projects',
+			'mapped' => false,
+			'label' => 'Проект'
 			])
 			;
 	}
