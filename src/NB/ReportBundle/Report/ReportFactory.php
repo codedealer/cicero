@@ -36,7 +36,7 @@ class ReportFactory
 		$class = $this->reports[$contractId];
 		$report = new $class($query, $this->localeSettings, $reportSummary);
 		if($report->doctrineRequired()){
-			$report->setDoctrine($doctrine);
+			$report->setDoctrine($this->doctrine);
 			return $report;
 		}
 		return $report;

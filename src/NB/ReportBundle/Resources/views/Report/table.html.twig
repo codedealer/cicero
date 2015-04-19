@@ -16,3 +16,39 @@
 	{% endfor %}
 	</tr>
 {% endmacro %}
+
+{% macro foot(totals) %}
+	<tr>
+		<td colspan="6">Итого:</td>
+		<td>{{totals.all.hours}}</td>
+	</tr>
+	{% if totals.uniqueWorktypes|length > 1 %}
+	{% for worktype in totals.uniqueWorktypes %}
+		{% if worktype.titles is defined %}
+		<tr>
+			<td colspan="4" {% if worktype.titles|length > 1 %} rowspan="{{worktype.titles|length}}" {% endif %}>{{worktype.name}}</td>
+			{% for key, value in worktype.titles %}
+				{% if loop.first %}
+					<td>{{key}}</td>
+					<td>{{value.hours}}</td>
+					<td {% if worktype.titles|length > 1 %} rowspan="{{worktype.titles|length}}" {% endif %}>{{worktype.hours}}</td>
+				{% endif %}
+			{% endfor %}
+		</tr>
+		{% for key, value in worktype.titles %}
+			{% if not loop.first %}
+			<tr>
+				<td>{{key}}</td>
+				<td>{{value.hours}}</td>
+			</tr>
+			{% endif %}
+		{% endfor %}
+		{% else %}
+			<tr>
+				<td colspan="6">{{worktype.name}}</td>
+				<td>{{worktype.hours}}</td>
+			</tr>
+		{% endif %}
+	{% endfor %}
+	{% endif %}
+{% endmacro %}

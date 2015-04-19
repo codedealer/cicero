@@ -9,25 +9,27 @@ class ReportUtils
 		return $start->format('d.m.Y H:i') . ' - ' . $end->format('d.m.Y H:i');
 	}
 
-	public static function calculateInterval($start, $end){
-		/*this is unreliable
-		$interval = $start->diff($end);
-		$formatString = '';
-		if(0 != $interval->m)
-			$formatString = '%m мес. ';
-		if(0 != $interval->d)
-			$formatString = '%d д. ';
-		$formatString .= '%h ч. ';
-		if(0 != $interval->i)
-			$formatString .= '%i м.';
-			*/
+	public static function calculateInterval($start, $end){	
+		$rawInterval = self::calculateRawInterval($start, $end);
 		
+		return self::formatInterval($rawInterval);
+	}
+
+	public static function calculateRawInterval($start, $end){
 		$rawInterval = $end->getTimeStamp() - $start->getTimeStamp();
 		$rawInterval /= 60;
+		return $rawInterval;
+	}
+
+	public static function formatInterval($rawInterval){
 		$minutes = $rawInterval % 60;
 		$hours = floor($rawInterval / 60);
 		$output = '';
+		if($hours)
+			$output = "$hours ч. ";
+		if($minutes)
+			$output = "$minutes мин.";
 
-		return $minutes ? "$hours ч. $minutes мин." : "$hours ч.";
+		return $output;
 	}
 }

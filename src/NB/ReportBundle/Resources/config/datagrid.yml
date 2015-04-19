@@ -132,6 +132,7 @@ datagrid:
                     - workunit.startDate
                     - workunit.endDate
                     - worktype.name as worktypeName
+                    - worktype.id as worktypeId
                     - CONCAT(owner.firstName, CONCAT(' ', owner.lastName)) as ownerName
                     - title.name as titleName
                 from:
