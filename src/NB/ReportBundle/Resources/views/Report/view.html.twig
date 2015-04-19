@@ -29,6 +29,9 @@
                     	<a href="{{path('nb_report_preview', {'id': contract_id, 'clientId': client})}}"
                     		class="btn back icons-holder-text btn-primary" target="_blank"
                     		><i class="icon-external-link"></i>Предпросмотр</a>
+                        <a href="{{path('nb_report_download', {'id': contract_id, 'clientId': client})}}"
+                            class="btn back icons-holder-text btn-success no-hash"
+                            ><i class="icon-cloud-download"></i>Скачать отчет</a>
                     {% endblock navButtons %}
                     {% placeholder index_navButtons_after with buttonsPlaceholderData %}
                 </div>

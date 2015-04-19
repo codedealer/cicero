@@ -1,6 +1,5 @@
 {% extends bap.layout %}
 {% import 'OroUIBundle::macros.html.twig' as UI %}
-{% set params = { 'clientId' : client, 'contract': contract_id} %}
 {% set pageTitle = report_info.report %}
 
 {% oro_title_set({params: {'%entity.title%':report_info.report~' для '~client.name}}) %}
@@ -23,7 +22,9 @@
                 <div class="pull-right title-buttons-container">
                     {% placeholder index_navButtons_before with buttonsPlaceholderData %}
                     {% block navButtons %}
-
+                        <a href="{{path('nb_report_download', {'id': contract_id, 'clientId': client.id})}}"
+                            class="btn back icons-holder-text btn-success no-hash"
+                            ><i class="icon-cloud-download"></i>Скачать отчет</a>
                     {% endblock navButtons %}
                     {% placeholder index_navButtons_after with buttonsPlaceholderData %}
                 </div>

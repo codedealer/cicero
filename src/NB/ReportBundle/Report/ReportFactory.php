@@ -34,6 +34,11 @@ class ReportFactory
 		$query->setDql($dql);
 
 		$class = $this->reports[$contractId];
-		return new $class($query, $this->localeSettings, $reportSummary);
+		$report = new $class($query, $this->localeSettings, $reportSummary);
+		if($report->doctrineRequired()){
+			$report->setDoctrine($doctrine);
+			return $report;
+		}
+		return $report;
 	}
 }

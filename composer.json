@@ -15,7 +15,8 @@
         }
     ],
     "require": {
-        "oro/platform": "1.6.*"
+        "oro/platform": "1.6.*",
+        "liuggio/excelbundle": "~2.0@dev"
     },
     "scripts": {
         "post-install-cmd": [

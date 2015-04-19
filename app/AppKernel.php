@@ -16,6 +16,7 @@ class AppKernel extends OroKernel
             new NB\ReportBundle\NBReportBundle(),
             new NB\CourtBundle\NBCourtBundle(),
             new NB\CalendarBundle\NBCalendarBundle(),
+            new Liuggio\ExcelBundle\LiuggioExcelBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev'))) {

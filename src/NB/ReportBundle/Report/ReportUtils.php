@@ -9,7 +9,7 @@ class ReportUtils
 		return $start->format('d.m.Y H:i') . ' - ' . $end->format('d.m.Y H:i');
 	}
 
-	public static function calculateInterval($start, $end, $localeSettings){
+	public static function calculateInterval($start, $end){
 		/*this is unreliable
 		$interval = $start->diff($end);
 		$formatString = '';

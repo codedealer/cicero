@@ -127,4 +127,42 @@ class ReportController extends Controller
 			'report' => $report->getReportTable($this->getRequest())
 		];
 	}
+
+	/**
+     * @Route(
+     * "/{id}/download/{clientId}",
+     * name="nb_report_download"
+     *      
+     * )
+     * @Acl(
+     *      id="oro_report_create",
+     *      type="entity",
+     *      class="OroReportBundle:Report",
+     *      permission="CREATE"
+     * )
+     */
+	public function downloadAction($id, $clientId){
+		if(!ContractContainer::has($id))
+			throw $this->createNotFoundException();
+
+		$client = $this->get('oro_entity.routing_helper')
+				->getEntity('Extend\Entity\client', $clientId);
+
+		$report = $this->get('nb_report.report_factory')->getReport($id);
+
+		$phpexcel = $this->get('phpexcel');
+		$e = $report->getExcelObject($this->getRequest(), $phpexcel, $client);
+
+		$writer = $this->get('phpexcel')->createWriter($e, 'Excel5');
+		$filename = uniqid();
+        // create the response
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        // adding headers
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment;filename=' . $filename . '.xls');
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Cache-Control', 'maxage=1');
+
+        return $response;
+	}
 }
