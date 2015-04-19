@@ -1,0 +1,52 @@
+{% extends bap.layout %}
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+{% set params = { 'clientId' : client, 'contract': contract_id} %}
+{% set pageTitle = report_info.report %}
+
+{% oro_title_set({params: {'%entity.title%':report_info.report~' для '~client.name}}) %}
+
+{% set buttonsPlaceholderData = {} %}
+
+{% block before_content_addition %}
+    {% placeholder index_before_content_addition %}
+{% endblock before_content_addition %}
+
+{% block content %}
+    <div class="container-fluid page-title">
+        <div class="navigation clearfix navbar-extra navbar-extra-right">
+            <div class="row">
+                <div class="pull-left pull-left-extra">
+                    <div class="pull-left">
+                        <h1 class="oro-subtitle">Предпросмотр</h1>
+                    </div>
+                </div>
+                <div class="pull-right title-buttons-container">
+                    {% placeholder index_navButtons_before with buttonsPlaceholderData %}
+                    {% block navButtons %}
+
+                    {% endblock navButtons %}
+                    {% placeholder index_navButtons_after with buttonsPlaceholderData %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="span-12">
+                <h5>{{report_info.report}}</h5>
+                <h5>{{client.name}}</h5>
+            </div>
+        </div>
+    </div>
+    {% import 'NBReportBundle:Report:table.html.twig' as Table %}
+    <div class="container-fluid grid-container-parent">
+    <div class="grid-container">
+        <table class="grid table table-bordered table-condensed">
+            <thead>{{Table.head(report.head)}}</thead>
+            <tbody>{{Table.parse(report.body)}}</tbody>
+            <tfoot></tfoot>
+        </table>
+    </div>
+    </div>
+{% endblock content %}
+

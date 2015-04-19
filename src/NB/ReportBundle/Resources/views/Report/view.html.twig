@@ -1,14 +1,57 @@
-{% extends 'OroUIBundle:actions:index.html.twig' %}
+{% extends bap.layout %}
 {% import 'OroUIBundle::macros.html.twig' as UI %}
+{% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
 {% set gridName = grid_name %}
-{% set params = { 'clientId' : client, 'contract': report_id} %}
-{% set pageTitle = report_info.report %}
+{% oro_title_set({params: {'%entity.title%':'Критерии отчета'}}) %}
+{% set params = { 'clientId' : client, 'contract': contract_id} %}
+{% set pageTitle = 'Укажите критерии отчета' %}
 
-{% block navButtons %}
-    {# if resource_granted('oro_report_create') %}
-        {{ UI.addButton({
-            'path' : path('nb_report_view', {'id':}),
-            'entity_label': 'Сформировать отчет'
-        }) }}
-    {% endif %#}
-{% endblock %}
+{% set buttonsPlaceholderData = {} %}
+
+{% block before_content_addition %}
+    {% placeholder index_before_content_addition %}
+{% endblock before_content_addition %}
+
+{% block content %}
+    <div class="container-fluid page-title">
+        <div class="navigation clearfix navbar-extra navbar-extra-right">
+            <div class="row">
+                <div class="pull-left pull-left-extra">
+                    <div class="pull-left">
+                        <h1 class="oro-subtitle">{{ pageTitle is defined ? pageTitle : '' }}</h1>
+                        <p>Договор: {{ report_info.label }}</p>
+                        <p>Клиент: {{ client_entity.name }}</p>
+                    </div>
+                </div>
+                <div class="pull-right title-buttons-container">
+                    {% placeholder index_navButtons_before with buttonsPlaceholderData %}
+                    {% block navButtons %}
+                    	<a href="{{path('nb_report_preview', {'id': contract_id, 'clientId': client})}}"
+                    		class="btn back icons-holder-text btn-primary" target="_blank"
+                    		><i class="icon-external-link"></i>Предпросмотр</a>
+                    {% endblock navButtons %}
+                    {% placeholder index_navButtons_after with buttonsPlaceholderData %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% block content_datagrid %}
+        {% if gridName is defined %}
+            {% if gridScope is defined %}
+                {% set gridName = oro_datagrid_build_fullname(gridName, gridScope) %}
+            {% endif %}
+            {% if params is defined %}
+                {{ dataGrid.renderGrid(gridName, params) }}
+            {% else %}
+                {{ dataGrid.renderGrid(gridName) }}
+            {% endif %}
+            {# Only grids on index pages will be tagged #}
+            <script type="text/javascript">
+                require(['oronavigation/js/content/grid-builder'], function (GridTagBuilder) {
+                    GridTagBuilder.allowTracking({{ gridName|json_encode|raw }});
+                });
+            </script>
+        {% endif %}
+    {% endblock content_datagrid %}
+{% endblock content %}
+

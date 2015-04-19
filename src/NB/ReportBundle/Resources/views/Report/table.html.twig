@@ -1,0 +1,18 @@
+{% macro parse(rows) %}
+{% for row in rows %}
+	<tr>
+	{% for cell in row %}
+		<td>{{cell}}</td>
+	{% endfor %}
+	</tr>
+{% endfor %}
+{% endmacro %}
+
+{% macro head(row) %}
+
+	<tr>
+	{% for cell in row %}
+		<th><a href="#">{{cell}}</a></th>
+	{% endfor %}
+	</tr>
+{% endmacro %}

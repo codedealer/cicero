@@ -9,7 +9,7 @@ class ContractContainer
 
 	protected static $info = [
 		self::MONTHLY => ['label' => 'Абонентский договор', 'report' => 'Отчет по абонентскому договору'],
-		self::HOURLY => ['label' => 'Почасовая оплата', 'report' => 'Отчет по выполненной работе'],
+		self::HOURLY => ['label' => 'Почасовая оплата', 'report' => 'Отчет по почасовому договору'],
 		self::PROJECT => ['label' => 'Проект', 'report' => 'Отчет по проекту'],
 	];
 

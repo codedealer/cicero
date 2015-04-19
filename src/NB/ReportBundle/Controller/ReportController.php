@@ -3,6 +3,7 @@
 namespace NB\ReportBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
@@ -54,13 +55,14 @@ class ReportController extends Controller
 
 			$client = $form->get('client')->getData();
 
-			return $this->redirect($this->get('router')->generate('nb_report_view', ['id' => $id, 'client' => $client->getId()]));
+			return new RedirectResponse($this->get('router')->generate('nb_report_view', 
+				['id' => $id, 'client' => $client->getId()]));
 		}
 
 		return [
 			'report_id' => $id,
 			'report_info' => ContractContainer::info($id),
-			'formAction' => $this->get('router')->generate('nb_report_view', ['id' => $id]),
+			'formAction' => $this->get('router')->generate('nb_report_index', ['id' => $id]),
             'form' => $form->createView()
 		];
 	}
@@ -83,11 +85,46 @@ class ReportController extends Controller
 		if(!ContractContainer::has($id))
 			throw $this->createNotFoundException();
 
+		$client = $this->get('oro_entity.routing_helper')
+				->getEntity('Extend\Entity\client', $this->getRequest()->get('client'));
+
 		return [
-			'report_id' => $id,
+			'contract_id' => $id,
 			'report_info' => ContractContainer::info($id),
 			'grid_name' => $this->grids[$id],
-			'client' => $this->getRequest()->get('client')
+			'client' => $this->getRequest()->get('client'),
+			'client_entity' => $client
+		];
+	}
+
+	/**
+     * @Route(
+     * "/{id}/preview/{clientId}",
+     * name="nb_report_preview"
+     *      
+     * )
+     * @Acl(
+     *      id="oro_report_create",
+     *      type="entity",
+     *      class="OroReportBundle:Report",
+     *      permission="CREATE"
+     * )
+     * @Template
+     */
+	public function previewAction($id, $clientId){
+		if(!ContractContainer::has($id))
+			throw $this->createNotFoundException();
+
+		$client = $this->get('oro_entity.routing_helper')
+				->getEntity('Extend\Entity\client', $clientId);
+
+		$report = $this->get('nb_report.report_factory')->getReport($id);
+
+		return [
+			'contract_id' => $id,
+			'report_info' => ContractContainer::info($id),
+			'client' => $client,
+			'report' => $report->getReportTable($this->getRequest())
 		];
 	}
 }

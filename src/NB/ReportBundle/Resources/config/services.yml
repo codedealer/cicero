@@ -77,6 +77,14 @@ services:
   nb_report.event_listener.month_datagrid:
         class: NB\ReportBundle\EventListener\ReportDatagridListener
         arguments:
-            - @logger
+            - @doctrine
+            - @security.context
         tags:
             - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after.grid-report-monthly, method: onBuildAfter }
+            - { name: kernel.event_listener, event: oro_datagrid.orm_datasource.result.before.grid-report-monthly, method: onResultBefore }
+  nb_report.report_factory:
+        class: NB\ReportBundle\Report\ReportFactory
+        arguments:
+            - @doctrine
+            - @security.context
+            - @oro_locale.settings

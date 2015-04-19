@@ -6,13 +6,18 @@ use Doctrine\ORM\QueryBuilder;
 use Oro\Bundle\DataGridBundle\Datagrid\ParameterBag;
 use Oro\Bundle\DataGridBundle\Datasource\Orm\OrmDatasource;
 use Oro\Bundle\DataGridBundle\Event\BuildAfter;
+use Oro\Bundle\DataGridBundle\Event\OrmResultBefore;
 
+use NB\ReportBundle\Entity\ReportSummary;
 
 class ReportDatagridListener
 {
-	public function __construct($logger)
+	protected $doctrine, $securityContext;
+
+    public function __construct($doctrine, $securityContext)
     {
-        $this->logger = $logger;
+        $this->doctrine = $doctrine;
+        $this->securityContext = $securityContext;
     }
 
 	public function onBuildAfter(BuildAfter $event)
@@ -22,7 +27,7 @@ class ReportDatagridListener
         $parameters = $datagrid->getParameters();
 
         if ($datasource instanceof OrmDatasource) {
-        	$this->logger->notice('its possible');
+        	
             /** @var QueryBuilder $query */
             $queryBuilder = $datasource->getQueryBuilder();
 
@@ -30,5 +35,20 @@ class ReportDatagridListener
 
             $queryBuilder->setParameter('contractId', $parameters->get('contract'));
         }
+    }
+
+    public function onResultBefore(OrmResultBefore $event){
+        $summary = $this->doctrine->getRepository('NBReportBundle:ReportSummary')
+                    ->findOneBy(['owner' => $this->securityContext->getToken()->getUser()->getId()]);
+        if(!($summary instanceof ReportSummary)){
+            $summary = new ReportSummary();
+            $summary->setOwner($this->securityContext->getToken()->getUser());
+        }
+
+        $summary->setDql($event->getQuery()->getDql());
+
+        $em = $this->doctrine->getManager();
+        $em->persist($summary);
+        $em->flush();
     }
 }
