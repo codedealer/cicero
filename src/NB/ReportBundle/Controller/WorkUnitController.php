@@ -71,6 +71,7 @@ class WorkUnitController extends Controller
             if($refId){
                 $workunit->setStartDate($_workunit->getEndDate());
                 $workunit->setClient($_workunit->getClient());
+                $workunit->setWorktype($_workunit->getWorktype());
                 $workunit->setContract($_workunit->getContract());
             }
         }
