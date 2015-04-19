@@ -71,6 +71,7 @@ class WorkUnitController extends Controller
             if($refId){
                 $workunit->setStartDate($_workunit->getEndDate());
                 $workunit->setClient($_workunit->getClient());
+                $workunit->setContract($_workunit->getContract());
             }
         }
 
@@ -139,7 +140,6 @@ class WorkUnitController extends Controller
     protected function getRelationData($entity){
     	$relationId = $entity->getId();
     	$relationClass = ClassUtils::getClass($entity);
-    	//$redirect = $this->redirectMap[str_replace('\\', '', strtolower($relationClass))];
 
     	return [
     		'id' => $relationId,
@@ -175,7 +175,7 @@ class WorkUnitController extends Controller
                     ],
                     1=>[
                     'route' => 'nb_feed_create',
-                    'params' => ['targetId' => $workunit->getRelatedEntityId(), 'ref' => $workunit->getId()]
+                    'params' => ['targetId' => $workunit->getRelatedEntityId()]
                     ],
                 ];
                 break;

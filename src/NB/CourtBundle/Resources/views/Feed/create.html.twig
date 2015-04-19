@@ -4,7 +4,7 @@
 
 {% block navButtons %}
     {% if ref is defined %}
-        {{ UI.cancelButton(path('nb_workunit_index')) }}
+        {{ UI.cancelButton(path('nb_workunit_create', {'ref': ref})) }}
     {% else %}
         {{ UI.cancelButton(path('oro_entity_view', {'id': targetId, 'entityName': 'Extend_Entity_Court'})) }}
     {% endif %}
