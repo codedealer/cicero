@@ -11,6 +11,7 @@ class FeedType extends AbstractType
 		
 		$builder
 			->add('subject', 'text', ['required' => true, 'label' => 'Тема'])
+			->add('result', 'text', ['required' => false, 'label' => 'Результат', 'mapped'=>false])
 			->add('description', 'textarea', ['required' => false, 'label' => 'Комментарий'])
 			->add('targetId', 'hidden', ['required' => true, 'mapped'=>false])
 			->add('createEvent', 'checkbox', ['required' => false, 'label' => 'Привязать к дате', 'mapped' => false])

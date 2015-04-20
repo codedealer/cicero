@@ -4,6 +4,14 @@
     <div class="responsive-block">
         {{ UI.renderProperty('Тема'|trans, entity.subject) }}
         {{ UI.renderHtmlProperty('Описание'|trans, entity.description|nl2br) }}
+        {% if entity.changeset.result is defined %}
+        	<div class="control-group">
+        		<label class="control-label"></label>
+        		<div class="controls"><div class="control-label" style="color:#981200">
+        			{{entity.owner.firstname}} {{entity.owner.lastname}} изменил результат дела с {{entity.changeset.result.old}} на <strong>{{entity.changeset.result.new}}</strong>
+        		</div></div>
+        	</div>
+        {% endif %}
         {{ UI.renderProperty('Дата обновления'|trans, entity.createdAt|oro_format_datetime) }}
     </div>
 </div>

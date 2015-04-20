@@ -68,6 +68,17 @@ class FeedController extends Controller
             		$court
             	);
 
+                $result = $form->get('result')->getData();
+                if($result){
+                    $_result = $court->getResult();
+                    $court->setResult($result);
+                    $feed->setChangeset(['result'=>[
+                                'old' => $_result,
+                                'new' => $result,
+                                ]]);
+                    $em->persist($court);
+                }
+
             	$createEvent = $form->get('createEvent')->getData();
             	if($createEvent){
             		$event = new CalendarEvent();
