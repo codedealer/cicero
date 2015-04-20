@@ -51,7 +51,7 @@ class ReportController extends Controller
 				;
 
 		$report = $this->get('nb_report.report_factory')->getReport($id);
-		$expressAction = $report->getExpressAction();
+		
 
 		$request = $this->getRequest();
 		if($request->isMethod('POST')){
@@ -59,8 +59,23 @@ class ReportController extends Controller
 
 			$client = $form->get('client')->getData();
 
-			return new RedirectResponse($this->get('router')->generate('nb_report_view', 
-				['id' => $id, 'client' => $client->getId()]));
+			if(!$client){
+				$this->get('session')->getFlashBag()->add(
+                    'danger',
+                    'Укажите обязательные параметры отчета'
+                );
+                return $this->redirect($this->get('router')->generate('nb_report_index', ['id' => $id]));
+			}
+
+			if($action = $request->get('input_action')){
+				if($action == 'save_and_stay')
+					return $this->forward('NBReportBundle:Report:default', ['id' => $id, 'client' => $client->getId()]);
+			}
+
+			return $this->get('oro_ui.router')->redirectAfterSave(
+				['route' => 'nb_report_default', 'parameters' => ['id' => $id, 'clientId' => $client->getId()]],
+				['route' => 'nb_report_view', 'parameters' => ['id' => $id, 'client' => $client->getId()]]
+				);
 		}
 
 		return [
@@ -68,7 +83,7 @@ class ReportController extends Controller
 			'report_info' => ContractContainer::info($id),
 			'formAction' => $this->get('router')->generate('nb_report_index', ['id' => $id]),
             'form' => $form->createView(),
-            'express_action' => $expressAction
+            'express_definition' => $report->getExpressDefinition(),
 		];
 	}
 
@@ -157,6 +172,46 @@ class ReportController extends Controller
 
 		$phpexcel = $this->get('phpexcel');
 		$e = $report->getExcelObject($this->getRequest(), $phpexcel, $client);
+
+		$writer = $this->get('phpexcel')->createWriter($e, 'Excel5');
+		$filename = uniqid();
+        // create the response
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        // adding headers
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment;filename=' . $filename . '.xls');
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Cache-Control', 'maxage=1');
+
+        return $response;
+	}
+
+	/**
+     * @Route(
+     * "/{id}/default/{clientId}",
+     * name="nb_report_default"
+     *      
+     * )
+     * @Acl(
+     *      id="oro_report_create",
+     *      type="entity",
+     *      class="OroReportBundle:Report",
+     *      permission="CREATE"
+     * )
+     * @Template
+     */
+	public function defaultAction($id, $clientId){
+		if(!ContractContainer::has($id))
+			throw $this->createNotFoundException();
+
+
+		$client = $this->get('oro_entity.routing_helper')
+				->getEntity('Extend\Entity\client', $clientId);
+
+		$report = $this->get('nb_report.report_factory')->getReport($id);
+
+		$phpexcel = $this->get('phpexcel');
+		$e = $report->getExpressExcelObject($this->getRequest(), $phpexcel, $client);
 
 		$writer = $this->get('phpexcel')->createWriter($e, 'Excel5');
 		$filename = uniqid();

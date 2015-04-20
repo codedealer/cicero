@@ -18,7 +18,7 @@ class MonthlyReport
 	}
 
 	public function doctrineRequired(){
-		return false;
+		return true;
 	}
 
 	public function setDoctrine($doctrine){
@@ -60,6 +60,10 @@ class MonthlyReport
 		];
 	}
 
+	public function getExpressDefinition(){
+		return 'NBReportBundle:Report:month_definition.html.twig';
+	}
+
 	public function getTotals($record, &$totals){
 		$overallTimeInMinutes = 0;
 		//foreach ($records as $record) {
@@ -90,8 +94,30 @@ class MonthlyReport
 		$totals['all']['hours'] += $overallTimeInMinutes;
 	}
 
+	public function getExpressExcelObject(Request $request, $phpexcel, $client){
+		$this->query = new Query($this->doctrine->getManager());
+		$dql = "SELECT workunit.id, workunit.subject, workunit.startDate, workunit.endDate, worktype.name as worktypeName, worktype.id as worktypeId, CONCAT(owner.firstName, CONCAT(' ', owner.lastName)) as ownerName, title.name as titleName FROM NB\ReportBundle\Entity\WorkUnit workunit LEFT JOIN workunit.worktype worktype LEFT JOIN workunit.owner owner LEFT JOIN workunit.client client LEFT JOIN owner.custom_title title WHERE client.id = :clientId AND workunit.contract = :contractId AND workunit.startDate >= :startDate AND workunit.endDate <= :endDate ORDER BY workunit.startDate ASC";
+		$this->query->setDql($dql);
+		$startDate = new \DateTime('first day of this month');
+		$endDate = new \DateTime('last day of this mont');
+		
+		$this->query->setParameter('startDate', $startDate)
+			  ->setParameter('endDate', $endDate)
+			  ->setParameter('clientId', $request->get('clientId'))
+			  ->setParameter('contractId', $request->get('id'))
+			  ;
+		$result = $this->query->getArrayResult();
+
+		return $this->buildExcelObject($result, $phpexcel, $client);
+	}
+
 	public function getExcelObject(Request $request, $phpexcel, $client){
 		$result = $this->getQueryResult($request);
+		return $this->buildExcelObject($result, $phpexcel, $client);
+	}
+
+	protected function buildExcelObject($result, $phpexcel, $client){
+		
 
 		$info = ContractContainer::info(ContractContainer::MONTHLY);
 		$title = $info['report'];

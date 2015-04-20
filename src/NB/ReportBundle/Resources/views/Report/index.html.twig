@@ -13,6 +13,14 @@
 {% endblock pageHeader %}
 
 {% block content_data %}
+    {%- set definition -%}
+        {% include express_definition %}
+    {%- endset -%}
+    {%- set bt -%}
+        <div class="clearfix"><a href="#" id="express" class="btn back icons-holder-text btn-success no-hash"
+                            ><i class="icon-cloud-download"></i>Экспресс отчет</a></div>
+        
+    {%- endset -%}
     {% set id = 'client-choice-form' %}
     {% set dataBlocks = [{
         'title': 'Клиент',
@@ -21,7 +29,16 @@
             {
                 'title': '',
                 'data': [
-                    form_row(form.client)
+
+                    form_row(form.client),
+                    bt
+                ]
+            },
+            {
+                'title': '',
+                'data': [
+                    
+                    definition
                 ]
             }
         ]
