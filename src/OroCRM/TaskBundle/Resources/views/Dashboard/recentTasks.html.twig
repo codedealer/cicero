@@ -1,0 +1,17 @@
+{% extends 'OroDashboardBundle:Dashboard:widget.html.twig' %}
+{% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
+
+{% block content %}
+    {{ dataGrid.renderGrid('widget-dash-tasks-grid', { 'name': 'closed'}) }}
+    
+{% endblock %}
+
+{% block actions %}
+    {% set actions = [{
+        'url': path('orocrm_task_index'),
+        'type': 'link',
+        'label': 'К задачам'|trans
+    }] %}
+
+    {{ parent() }}
+{% endblock %}
