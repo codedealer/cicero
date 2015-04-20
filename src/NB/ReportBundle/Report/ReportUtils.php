@@ -28,7 +28,7 @@ class ReportUtils
 		if($hours)
 			$output = "$hours ч. ";
 		if($minutes)
-			$output = "$minutes мин.";
+			$output .= "$minutes мин.";
 
 		return $output;
 	}

@@ -60,32 +60,32 @@ class MonthlyReport
 		];
 	}
 
-	public function getTotals($records, &$totals){
+	public function getTotals($record, &$totals){
 		$overallTimeInMinutes = 0;
-		foreach ($records as $record) {
+		//foreach ($records as $record) {
 			$overallTimeInMinutes = ReportUtils::calculateRawInterval($record['startDate'], $record['endDate']);
 			
-			$titleName = empty($record['titleName']) ? 'Призрак' : $record['titleName'];
+			$titleName = $record['titleName'] ? $record['titleName'] : 'Призрак';
 
 			if(array_key_exists($record['worktypeId'], $totals['uniqueWorkTypes'])){
-				$totals['uniqueWorkTypes'][$record['worktypeId']]['hours'] += ReportUtils::calculateRawInterval($record['startDate'], $record['endDate']);
+				$totals['uniqueWorkTypes'][$record['worktypeId']]['hours'] += $overallTimeInMinutes;
 				if(array_key_exists($titleName, $totals['uniqueWorkTypes'][$record['worktypeId']]['titles'])){
-					$totals['uniqueWorkTypes'][$record['worktypeId']]['titles'][$titleName]['hours'] += ReportUtils::calculateRawInterval($record['startDate'], $record['endDate']);
+					$totals['uniqueWorkTypes'][$record['worktypeId']]['titles'][$titleName]['hours'] += $overallTimeInMinutes;
 				}
 				else{
-					$totals['uniqueWorkTypes'][$record['worktypeId']]['titles'][$titleName] = ['hours' => ReportUtils::calculateRawInterval($record['startDate'], $record['endDate'])];
+					$totals['uniqueWorkTypes'][$record['worktypeId']]['titles'][$titleName] = ['hours' => $overallTimeInMinutes];
 				}
 			}
 			else{
 				$totals['uniqueWorkTypes'][$record['worktypeId']] = [
 				'name' => $record['worktypeName'],
-				'hours' => ReportUtils::calculateRawInterval($record['startDate'], $record['endDate']),
+				'hours' => $overallTimeInMinutes,
 				'titles' => [
-					$titleName => ['hours' => ReportUtils::calculateRawInterval($record['startDate'], $record['endDate'])],
+					$titleName => ['hours' => $overallTimeInMinutes],
 				],
 				];
 			}
-		}
+		//}
 
 		$totals['all']['hours'] += $overallTimeInMinutes;
 	}
@@ -122,6 +122,10 @@ class MonthlyReport
         	'font' => ['bold' => true]
         	]);
         $row = 4;
+        $totals = [
+			'all' => ['hours' => 0],
+			'uniqueWorkTypes' => [],
+		];
         foreach ($result as $record) {
         	$sheet->setCellValue('A' . $row, ReportUtils::formatDate($record['startDate'], $record['endDate'], $this->localeSettings))
         		->setCellValue('B' . $row, $record['ownerName'])
@@ -131,7 +135,12 @@ class MonthlyReport
         		->setCellValue('F' . $row, ReportUtils::calculateInterval($record['startDate'], $record['endDate']))
         		;
         		$row++;
+        		$this->getTotals($record, $totals);
         }
+
+        $this->forceUniqueWorktypes($totals);
+
+		$this->recalculateHours($totals);
 
         foreach (range('A','F') as $colId) {
         	if('E' !== $colId)
@@ -142,8 +151,66 @@ class MonthlyReport
         		$sheet->getStyle('E4:E'.$row)->getAlignment()->setWrapText(true);
         	}
         }
+        $row++;
+        $this->drawExcelTotals($sheet, $totals, $row);
          
         return $e;
+	}
+
+	protected function drawExcelTotals($sheet, $totals, $row){
+		$sheet->setCellValue('A'.$row, 'Итого:')
+			  ->setCellValue('F'.$row, $totals['all']['hours'])
+			  ->mergeCells('A'.$row.':E'.$row)
+			  ->getStyle('A'.$row.':F'.$row)
+			  ->applyFromArray([
+        	'fill' => ['type' => \PHPExcel_Style_Fill::FILL_SOLID,
+        				'color' => ['rgb' => 'DDDDDD']],
+        	'font' => ['bold' => true]
+        	]);
+
+		$row++;
+		$startSubTotals = $row;
+		if(count($totals['uniqueWorkTypes']) > 1){
+			foreach ($totals['uniqueWorkTypes'] as $wtId => $worktype) {
+				if(array_key_exists('titles', $worktype)){
+					$first = true;
+					$startMerge = $row;
+					foreach ($worktype['titles'] as $titleName => $value) {
+						if($first){
+							$first = false;
+							$sheet->setCellValue('A'.$row, $worktype['name'])
+								  ->getStyle('A'.$row)
+								  ->getAlignment()
+								  ->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+							$sheet->setCellValue('F'.$row, $worktype['hours'])
+								  ->getStyle('F'.$row)
+								  ->getAlignment()
+								  ->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+						}
+						$sheet->setCellValue('D'.$row, $titleName)
+							  ->setCellValue('E'.$row, $value['hours']);
+						$row++;
+					}
+					$row--;
+					$endMerge = $row;
+					$sheet->mergeCells('A'.$startMerge.':C'.$endMerge)
+						  ->mergeCells('F'.$startMerge.':F'.$endMerge);
+				}
+				else{
+					$sheet->setCellValue('A'.$row, $worktype['name'])
+						  ->setCellValue('F'.$row, $worktype['hours'])
+						  ->mergeCells('A'.$row.':E'.$row)
+						  ;
+				}
+				$row++;
+			}
+			$row--;
+			$sheet->getStyle('A'.$startSubTotals.':F'.$row)
+				  ->applyFromArray([
+        				'fill' => ['type' => \PHPExcel_Style_Fill::FILL_SOLID,
+        				'color' => ['rgb' => 'EFEFEF']]])
+				  ;
+		}
 	}
 
 	protected function getQueryResult(Request $request){
@@ -166,7 +233,7 @@ class MonthlyReport
 	//convert int minutes to hours/minutes representation
 	protected function recalculateHours(&$totals){
 		$totals['all']['hours'] = ReportUtils::formatInterval($totals['all']['hours']);
-		foreach ($totals as $id => $wt) {
+		foreach ($totals['uniqueWorkTypes'] as $id => $wt) {
 			$totals['uniqueWorkTypes'][$id]['hours'] = ReportUtils::formatInterval($wt['hours']);
 			if(array_key_exists('titles', $wt)){
 				foreach ($wt['titles'] as $titleName => $title) {

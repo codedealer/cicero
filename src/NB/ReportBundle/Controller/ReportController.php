@@ -49,6 +49,10 @@ class ReportController extends Controller
 				])
 				->getForm()
 				;
+
+		$report = $this->get('nb_report.report_factory')->getReport($id);
+		$expressAction = $report->getExpressAction();
+
 		$request = $this->getRequest();
 		if($request->isMethod('POST')){
 			$form->bind($request);
@@ -63,7 +67,8 @@ class ReportController extends Controller
 			'report_id' => $id,
 			'report_info' => ContractContainer::info($id),
 			'formAction' => $this->get('router')->generate('nb_report_index', ['id' => $id]),
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'express_action' => $expressAction
 		];
 	}
 

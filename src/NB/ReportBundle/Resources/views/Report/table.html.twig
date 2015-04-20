@@ -19,14 +19,14 @@
 
 {% macro foot(totals) %}
 	<tr>
-		<td colspan="6">Итого:</td>
+		<td colspan="5">Итого:</td>
 		<td>{{totals.all.hours}}</td>
 	</tr>
-	{% if totals.uniqueWorktypes|length > 1 %}
-	{% for worktype in totals.uniqueWorktypes %}
+	{% if totals.uniqueWorkTypes|length > 1 %}
+	{% for worktype in totals.uniqueWorkTypes %}
 		{% if worktype.titles is defined %}
 		<tr>
-			<td colspan="4" {% if worktype.titles|length > 1 %} rowspan="{{worktype.titles|length}}" {% endif %}>{{worktype.name}}</td>
+			<td colspan="3" {% if worktype.titles|length > 1 %} rowspan="{{worktype.titles|length}}" {% endif %}>{{worktype.name}}</td>
 			{% for key, value in worktype.titles %}
 				{% if loop.first %}
 					<td>{{key}}</td>
@@ -45,7 +45,7 @@
 		{% endfor %}
 		{% else %}
 			<tr>
-				<td colspan="6">{{worktype.name}}</td>
+				<td colspan="5">{{worktype.name}}</td>
 				<td>{{worktype.hours}}</td>
 			</tr>
 		{% endif %}
