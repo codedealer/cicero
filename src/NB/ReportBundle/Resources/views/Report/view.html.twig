@@ -3,7 +3,7 @@
 {% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
 {% set gridName = grid_name %}
 {% oro_title_set({params: {'%entity.title%':'Критерии отчета'}}) %}
-{% set params = { 'clientId' : client, 'contract': contract_id} %}
+{% set params = { 'clientId' : client, 'contract': contract_id, 'relatedClass': report_info.target_class} %}
 {% set pageTitle = 'Укажите критерии отчета' %}
 
 {% set buttonsPlaceholderData = {} %}
@@ -20,7 +20,7 @@
                     <div class="pull-left">
                         <h1 class="oro-subtitle">{{ pageTitle is defined ? pageTitle : '' }}</h1>
                         <p>Договор: {{ report_info.label }}</p>
-                        <p>Клиент: {{ client_entity.name }}</p>
+                        <p>{{report_info.target_label}}: {{ client_entity.name }}</p>
                     </div>
                 </div>
                 <div class="pull-right title-buttons-container">

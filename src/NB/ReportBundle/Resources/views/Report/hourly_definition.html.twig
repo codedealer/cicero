@@ -1,0 +1,14 @@
+<p>Экспресс отчет сформирует документ со стандартными параметрами для отчета по договору почасового обслуживания</p>
+<script>
+        require(['jquery'], function($){
+            $('#express').click(function(e){
+                if($(this).attr('href') == '#'){
+                    //e.preventDefault();
+                    var id = {{report_id}};
+                    var client = $('[name="form\[client\]"]').val();
+                    $(this).attr('href', '' + id + '/default/' + client);
+                }
+                
+            });
+        });
+        </script>

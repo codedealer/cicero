@@ -81,10 +81,13 @@ services:
             - @security.context
         tags:
             - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after.grid-report-monthly, method: onBuildAfter }
+            - { name: kernel.event_listener, event: oro_datagrid.datagrid.build.after.grid-report-project, method: onBuildAfter }
             - { name: kernel.event_listener, event: oro_datagrid.orm_datasource.result.before.grid-report-monthly, method: onResultBefore }
+            - { name: kernel.event_listener, event: oro_datagrid.orm_datasource.result.before.grid-report-project, method: onResultBefore }
   nb_report.report_factory:
         class: NB\ReportBundle\Report\ReportFactory
         arguments:
             - @doctrine
             - @security.context
             - @oro_locale.settings
+            - @oro_entity.routing_helper

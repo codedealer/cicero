@@ -8,17 +8,20 @@ use Doctrine\ORM\Query;
 
 class ReportFactory
 {
-	protected $doctrine, $localeSettings, $securityContext;
+	protected $doctrine, $localeSettings, $securityContext, $helper;
 
 	private $reports = [
 		ContractContainer::MONTHLY => 'NB\ReportBundle\Report\MonthlyReport',
-		ContractContainer::HOURLY  => 'NB\ReportBundle\Report\HourlyReport'
+		ContractContainer::HOURLY  => 'NB\ReportBundle\Report\HourlyReport',
+		ContractContainer::PROJECT  => 'NB\ReportBundle\Report\ProjectReport',
+		ContractContainer::COURT  => 'NB\ReportBundle\Report\CourtReport'
 	];
 
-	public function __construct($doctrine, $securityContext, $localeSettings){
+	public function __construct($doctrine, $securityContext, $localeSettings, $helper){
 		$this->doctrine = $doctrine;
 		$this->localeSettings = $localeSettings;
 		$this->securityContext = $securityContext;
+		$this->helper = $helper;
 	}
 
 	public function getReport($contractId){
@@ -37,7 +40,9 @@ class ReportFactory
 		$report = new $class($query, $this->localeSettings, $reportSummary);
 		if($report->doctrineRequired()){
 			$report->setDoctrine($this->doctrine);
-			return $report;
+		}
+		if($report->helperRequired()){
+			$report->setHelper($this->helper);
 		}
 		return $report;
 	}

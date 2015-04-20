@@ -72,13 +72,27 @@ oro_menu_config:
       route: 'nb_report_index'
       routeParameters:
         id: 1
+    hourly_report:
+      label: 'Договор с почасовой оплатой'
+      route: 'nb_report_index'
+      routeParameters:
+        id: 2
+    project_report:
+      label: 'Отчет по проекту'
+      route: 'nb_report_index'
+      routeParameters:
+        id: 3
+    court_report:
+      label: 'Отчет по судебному делу'
+      route: 'nb_report_index'
+      routeParameters:
+        id: 4
   tree:
     application_menu:
       children:
         clients_tab:
           children:
             clients: ~
-        table_calendar:
         activities_tab:
           children:
             registration: ~
@@ -89,6 +103,8 @@ oro_menu_config:
           merge_strategy: replace
           children:
             month_report: ~
+            hourly_report: ~
+            project_report: ~
         system_tab:
           children:
             users_management:

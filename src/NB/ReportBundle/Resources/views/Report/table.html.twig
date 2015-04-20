@@ -21,6 +21,9 @@
 	<tr>
 		<td colspan="5">Итого:</td>
 		<td>{{totals.all.hours}}</td>
+		{% if totals.all.price is defined %}
+			<td>{{totals.all.price}} p.</td>
+		{% endif %}
 	</tr>
 	{% if totals.uniqueWorkTypes|length > 1 %}
 	{% for worktype in totals.uniqueWorkTypes %}
@@ -30,8 +33,11 @@
 			{% for key, value in worktype.titles %}
 				{% if loop.first %}
 					<td>{{key}}</td>
-					<td>{{value.hours}}</td>
+					<td>{{value.hours}} {% if value.price is defined %}({{value.price}} p.){% endif %}</td>
 					<td {% if worktype.titles|length > 1 %} rowspan="{{worktype.titles|length}}" {% endif %}>{{worktype.hours}}</td>
+					{% if value.price is defined %}
+						<td {% if worktype.titles|length > 1 %} rowspan="{{worktype.titles|length}}" {% endif %}>{{worktype.price}} p.</td>
+					{% endif %}
 				{% endif %}
 			{% endfor %}
 		</tr>
@@ -39,7 +45,7 @@
 			{% if not loop.first %}
 			<tr>
 				<td>{{key}}</td>
-				<td>{{value.hours}}</td>
+				<td>{{value.hours}} {% if value.price is defined %}({{value.price}} p.){% endif %}</td>
 			</tr>
 			{% endif %}
 		{% endfor %}
@@ -47,6 +53,7 @@
 			<tr>
 				<td colspan="5">{{worktype.name}}</td>
 				<td>{{worktype.hours}}</td>
+				<td>{{worktype.price}} p.</td>
 			</tr>
 		{% endif %}
 	{% endfor %}

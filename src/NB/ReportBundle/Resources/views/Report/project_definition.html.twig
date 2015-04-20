@@ -1,0 +1,14 @@
+<p>Экспресс отчет сформирует документ со стандартными параметрами для отчета по проекту</p>
+<script>
+        require(['jquery'], function($){
+            $('#express').click(function(e){
+                if($(this).attr('href') == '#'){
+                    //e.preventDefault();
+                    var id = {{report_id}};
+                    var project = $('[name="form\[project\]"]').val();
+                    $(this).attr('href', '' + id + '/default/' + project);
+                }
+                
+            });
+        });
+        </script>

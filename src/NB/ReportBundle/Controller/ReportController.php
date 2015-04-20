@@ -19,8 +19,9 @@ class ReportController extends Controller
 {
 	protected $grids = [
 	ContractContainer::MONTHLY => 'grid-report-monthly',
-	ContractContainer::HOURLY => 'grid-report-hourly',
-	ContractContainer::PROJECT => 'grid-report-project'
+	ContractContainer::HOURLY => 'grid-report-monthly',
+	ContractContainer::PROJECT => 'grid-report-project',
+	ContractContainer::COURT => 'grid-report-project',
 	];
 
 	/**
@@ -41,23 +42,16 @@ class ReportController extends Controller
 		if(!ContractContainer::has($id))
 			throw $this->createNotFoundException();
 
-		$form = $this->createFormBuilder([])
-				->add('client', 'oro_jqueryselect2_hidden', [
-					'autocomplete_alias' => 'clients',
-					'label' => 'Клиент',
-					'required' => true
-				])
-				->getForm()
-				;
-
 		$report = $this->get('nb_report.report_factory')->getReport($id);
-		
+
+		$formBuilder = $this->createFormBuilder([]);
+		$form = $report->getForm($formBuilder);
 
 		$request = $this->getRequest();
 		if($request->isMethod('POST')){
 			$form->bind($request);
 
-			$client = $form->get('client')->getData();
+			$client = $report->process($form);
 
 			if(!$client){
 				$this->get('session')->getFlashBag()->add(
@@ -65,11 +59,6 @@ class ReportController extends Controller
                     'Укажите обязательные параметры отчета'
                 );
                 return $this->redirect($this->get('router')->generate('nb_report_index', ['id' => $id]));
-			}
-
-			if($action = $request->get('input_action')){
-				if($action == 'save_and_stay')
-					return $this->forward('NBReportBundle:Report:default', ['id' => $id, 'client' => $client->getId()]);
 			}
 
 			return $this->get('oro_ui.router')->redirectAfterSave(
@@ -105,15 +94,17 @@ class ReportController extends Controller
 		if(!ContractContainer::has($id))
 			throw $this->createNotFoundException();
 
+		$report_info = ContractContainer::info($id);
+
 		$client = $this->get('oro_entity.routing_helper')
-				->getEntity('Extend\Entity\client', $this->getRequest()->get('client'));
+				->getEntity($report_info['target_class'], $this->getRequest()->get('client'));
 
 		return [
 			'contract_id' => $id,
-			'report_info' => ContractContainer::info($id),
+			'report_info' => $report_info,
 			'grid_name' => $this->grids[$id],
 			'client' => $this->getRequest()->get('client'),
-			'client_entity' => $client
+			'client_entity' => $client,
 		];
 	}
 
@@ -135,14 +126,15 @@ class ReportController extends Controller
 		if(!ContractContainer::has($id))
 			throw $this->createNotFoundException();
 
+		$report_info = ContractContainer::info($id);
 		$client = $this->get('oro_entity.routing_helper')
-				->getEntity('Extend\Entity\client', $clientId);
+				->getEntity($report_info['target_class'], $clientId);
 
 		$report = $this->get('nb_report.report_factory')->getReport($id);
 
 		return [
 			'contract_id' => $id,
-			'report_info' => ContractContainer::info($id),
+			'report_info' => $report_info,
 			'client' => $client,
 			'report' => $report->getReportTable($this->getRequest())
 		];
@@ -165,8 +157,9 @@ class ReportController extends Controller
 		if(!ContractContainer::has($id))
 			throw $this->createNotFoundException();
 
+		$report_info = ContractContainer::info($id);
 		$client = $this->get('oro_entity.routing_helper')
-				->getEntity('Extend\Entity\client', $clientId);
+				->getEntity($report_info['target_class'], $clientId);
 
 		$report = $this->get('nb_report.report_factory')->getReport($id);
 
@@ -204,9 +197,9 @@ class ReportController extends Controller
 		if(!ContractContainer::has($id))
 			throw $this->createNotFoundException();
 
-
+		$report_info = ContractContainer::info($id);
 		$client = $this->get('oro_entity.routing_helper')
-				->getEntity('Extend\Entity\client', $clientId);
+				->getEntity($report_info['target_class'], $clientId);
 
 		$report = $this->get('nb_report.report_factory')->getReport($id);
 

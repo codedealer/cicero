@@ -185,3 +185,72 @@ datagrid:
                 titleName:
                     type:      string
                     data_name: titleName
+    grid-report-project:
+        options:
+            entity_pagination: true
+            skip_acl_check: true
+        extended_entity_name: %nb_workunit.entity.class%
+        source:
+            type: orm
+            query:
+                select:
+                    - workunit.id
+                    - workunit.subject
+                    - workunit.startDate
+                    - workunit.endDate
+                    - worktype.name as worktypeName
+                    - worktype.id as worktypeId
+                    - CONCAT(owner.firstName, CONCAT(' ', owner.lastName)) as ownerName
+                    - title.name as titleName
+                from:
+                    - { table: %nb_workunit.entity.class%, alias: workunit }
+                join:
+                    left:
+                        - { join: workunit.worktype, alias: worktype }
+                        - { join: workunit.owner, alias: owner }
+                        - { join: owner.custom_title, alias: title }
+                where:
+                    and:
+                        - workunit.contract = :contractId
+                        - workunit.relatedEntityId = :clientId
+                        - workunit.relatedEntityClass = :relatedClass
+            bind_parameters:
+                - relatedClass
+        columns:
+            startDate:
+                label:         Начало
+                frontend_type:          datetime
+            endDate:
+                label:         Окончание
+                frontend_type:          datetime
+            ownerName:
+                label:         Юрист
+            titleName:
+                label:         Должность
+            worktypeName:
+                label:         Тип работы
+            subject:
+                label:         nb.wu.subject.label
+        sorters:
+            columns:
+                startDate:
+                    data_name: workunit.startDate
+            default:
+                startDate: ASC
+        filters:
+            columns:
+                startDate:
+                    type: datetime
+                    data_name: workunit.startDate
+                endDate:
+                    type: datetime
+                    data_name: workunit.endDate
+                worktypeName:
+                    type:      string
+                    data_name: worktypeName
+                ownerName:
+                    type:      string
+                    data_name: ownerName
+                titleName:
+                    type:      string
+                    data_name: titleName
