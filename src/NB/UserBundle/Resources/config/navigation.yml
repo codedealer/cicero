@@ -87,6 +87,8 @@ oro_menu_config:
       route: 'nb_report_index'
       routeParameters:
         id: 4
+    oro_system_calendar_list:
+      display: false
   tree:
     application_menu:
       children:
