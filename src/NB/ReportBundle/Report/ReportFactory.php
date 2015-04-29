@@ -28,14 +28,18 @@ class ReportFactory
 		$userId = $this->securityContext->getToken()->getUser()->getId();
 		$reportSummary = $this->doctrine->getRepository('NBReportBundle:ReportSummary')
 							  ->findOneBy(['owner'=> $userId]);
-		if(!($reportSummary instanceof ReportSummary))
-			throw new \RuntimeException('Для данного пользователя нет настроек отчета');
+		if(!($reportSummary instanceof ReportSummary)){
+			//create mock
+			$reportSummary = new ReportSummary();
+      		$query = new Query($this->doctrine->getManager());
+		}
+		else{
+			$dql = $reportSummary->getDql();
 
-		$dql = $reportSummary->getDql();
-
-		$query = new Query($this->doctrine->getManager());
-		$query->setDql($dql);
-
+			$query = new Query($this->doctrine->getManager());
+			$query->setDql($dql);
+		}
+		
 		$class = $this->reports[$contractId];
 		$report = new $class($query, $this->localeSettings, $reportSummary);
 		if($report->doctrineRequired()){
