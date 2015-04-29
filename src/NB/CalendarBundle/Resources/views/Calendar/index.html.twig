@@ -32,13 +32,14 @@
 	<div class="layout-content scrollable-container">
 		<div id="calendar-container"></div>
 		<script type="text/javascript">
-			require(['jquery'], function($){
+			require(['jquery', 'oroui/js/app/views/loading-mask-view'], function($, LoadingMask){
 				var updateUrl = '{{path('nb_api_get_table')}}';
 				var y = '{{year}}';
 				var m = '{{month}}';
+				
 				function upd(updateUrl, y, m){
 					$.getJSON(updateUrl, {year: y, month: m}, function(json, textStatus) {
-						console.log(json);
+						
 						var days = parseInt(json["meta"].days);
 						var html = '<div class="table-calendar-container scrollable-container"><div class="table-calendar-toolbar fc"><div class="fc-left"><div class="fc-button-group"><button class="fc-prev-button fc-button fc-state-default fc-corner-left" type="button"><span class="fc-icon fc-icon-left-single-arrow"></span></button><button class="fc-next-button fc-button fc-state-default fc-corner-right" type="button"><span class="fc-icon fc-icon-right-single-arrow"></span></button></div><h2>'+json.meta.monthName+' '+json.meta.year+'</h2></div></div><div class="table-calendar"><table class="tc table table-hover table-condensed">';
 						//head
@@ -68,6 +69,7 @@
 						$('.fc-prev-button').click(function(){
 							var m = parseInt(json.meta.month);
 							var y = parseInt(json.meta.year);
+							loadingMask.show();
 							if(m == 1){
 								m = 12;
 								y -= 1;
@@ -81,6 +83,7 @@
 						$('.fc-next-button').click(function(){
 							var m = parseInt(json.meta.month);
 							var y = parseInt(json.meta.year);
+							loadingMask.show();
 							if(m == 12){
 								m = 1;
 								y += 1;
@@ -90,10 +93,16 @@
 							
 							upd(updateUrl, y, m);
 						});
+
+						loadingMask.hide();
 					});
 				}
 				
 				upd(updateUrl, y, m);
+				var loadingMask = new LoadingMask({
+					container: $('#calendar-container'),
+					loadingHint: 'Обновление'
+				});
 			});
 		</script>
 	</div>
