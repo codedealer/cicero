@@ -1,9 +1,18 @@
 <p>Экспресс отчет сформирует документ со стандартными параметрами для отчета по проекту</p>
 <script>
         require(['jquery'], function($){
+            $('[name="form[project]"]').on('change', function(e){
+                if(e.val)
+                    $('#express').removeClass('disabled');
+                else
+                    $('#express').addClass('disabled');
+            });
             $('#express').click(function(e){
                 if($(this).attr('href') == '#'){
-                    //e.preventDefault();
+                    if($(this).hasClass('disabled')){
+                        e.preventDefault();
+                        return false;
+                    }
                     var id = {{report_id}};
                     var project = $('[name="form\[project\]"]').val();
                     $(this).attr('href', '' + id + '/default/' + project);
