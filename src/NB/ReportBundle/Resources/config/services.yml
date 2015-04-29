@@ -74,6 +74,10 @@ services:
             - @translator
         tags:
           - { name: oro_calendar.calendar_provider, alias: work }
+  nb_workunit.workunit_provider:
+        class: NB\ReportBundle\Provider\WorkUnitProvider
+        arguments:
+            - @doctrine
   nb_report.event_listener.month_datagrid:
         class: NB\ReportBundle\EventListener\ReportDatagridListener
         arguments:

@@ -1,0 +1,12 @@
+nb_calendar_bundle:
+    resource:     "@NBCalendarBundle/Controller"
+    type:         annotation
+    prefix:       /
+nb_calendar_bundle_api:
+    resource:     "@NBCalendarBundle/Controller/Api/Rest/CalendarController.php"
+    type:         rest
+    prefix:       api/rest/{version}
+    requirements:
+        version:  latest|v1
+    defaults:
+        version:  latest

@@ -1,0 +1,38 @@
+.table-calendar-container{
+	margin: 0 20px;
+}
+
+.table-calendar-container h2{
+	font-size: 18px;
+  margin: 0;
+  line-height: 30px;
+  margin-left: 0.75em;
+  float: left;
+}
+
+.table-calendar-container .fc-button-group{
+	float: left;
+}
+
+.tc thead tr{
+	background: #ccc;
+}
+
+.tc thead tr th{
+	font-size: 13px;
+	text-align: center;
+}
+
+.tc td{
+	text-align: center;
+	padding: 6px 6px;
+	border: 1px solid #ddd;
+}
+
+.tc td:nth-child(2n){
+	background: #f5f5f5;
+}
+
+.tc .user-td{
+	text-align: left;
+}

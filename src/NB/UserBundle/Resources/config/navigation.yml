@@ -50,12 +50,6 @@ oro_menu_config:
         entityName: 'Extend_Entity_client'
       extras:
         routes: ['/^Extend_Entity_client/']
-    table_calendar:
-      label: 'Табель Календарь'
-      uri: '#'
-      aclResourceId: oro_system_calendar_view
-      extras:
-        position: 2
     system_tab:
       extras:
         position: 170
@@ -89,6 +83,12 @@ oro_menu_config:
         id: 4
     oro_system_calendar_list:
       display: false
+    table_calendar:
+      label: 'Табель-календарь'
+      aclResourceId: oro_system_calendar_view
+      route: 'nb_table_index'
+      extras:
+        position: 2
   tree:
     application_menu:
       children:
@@ -107,6 +107,7 @@ oro_menu_config:
             month_report: ~
             hourly_report: ~
             project_report: ~
+        table_calendar: ~
         system_tab:
           children:
             users_management:

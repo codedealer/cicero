@@ -1,0 +1,3 @@
+css:
+  frontend:
+    - 'bundles/nbcalendar/css/table-calendar.css'

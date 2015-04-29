@@ -1,0 +1,21 @@
+<div class="span-10 table-calendar-container scrollable-container">
+			<div class="table-calendar-toolbar fc">
+				<div class="fc-left">
+					<div class="fc-button-group">
+						<button class="fc-prev-button fc-button fc-state-default fc-corner-left" type="button">
+							<span class="fc-icon fc-icon-left-single-arrow"></span>
+						</button>
+						<button class="fc-next-button fc-button fc-state-default fc-corner-right" type="button">
+							<span class="fc-icon fc-icon-right-single-arrow"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+	<div class="table-calendar">
+		<table class="table table-hover">
+			{% for user in users %}
+				<tr><td class="user-{{user.id}}">{{user.firstname}}</td></tr>
+			{% endfor %}
+		</table>
+	</div>
+</div>
