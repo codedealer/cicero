@@ -4,7 +4,7 @@ oro_menu_config:
             label: 'orocrm.task.entity_plural_label'
             route: 'orocrm_task_index'
             extras:
-                position: 10
+                position: 7
                 routes: ['orocrm_task_update', 'orocrm_task_create', 'orocrm_task_view']
                 description: 'orocrm.task.menu.task_list.description'
 
@@ -17,9 +17,7 @@ oro_menu_config:
     tree:
         application_menu:
             children:
-                activities_tab:
-                    children:
-                        task_list: ~
+                task_list: ~
         usermenu:
             children:
                 orocrm_task_my_tasks: ~

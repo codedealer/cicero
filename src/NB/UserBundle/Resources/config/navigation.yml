@@ -40,27 +40,25 @@ oro_menu_config:
         position: 52
     clients_tab:
       label: 'Клиенты'
-      uri: '#'
-      extras:
-        position: 3
-    clients:
-      label: 'Клиенты'
       route: 'oro_entity_index'
       routeParameters:
         entityName: 'Extend_Entity_client'
       extras:
         routes: ['/^Extend_Entity_client/']
+        position: 3
     system_tab:
+      aclResourceId: oro_report_create
       extras:
         position: 170
     activities_tab:
+      display: false
       extras:
         position: 1
     reports_tab:
       label: 'Отчеты'
       aclResourceId: oro_report_create
       extras:
-        position: 4
+        position: 8
     month_report:
       label: 'Ежемесячный отчет'
       route: 'nb_report_index'
@@ -89,14 +87,39 @@ oro_menu_config:
       route: 'nb_table_index'
       extras:
         position: 2
+    users:
+      label: Сотрудники
+      route: 'oro_user_index'
+      extras:
+        position: 3
+    calendar_tab:
+      label: Календарь
+      uri: '#'
+      extras:
+        position: 5
+    calendar:
+      label: Календарь
+      route: 'oro_calendar_view_default'
+      extras:
+        position: 4
+    category_tab:
+      label: 'Категории дел'
+      uri: '#'
+      extras:
+        position: 6
   tree:
     application_menu:
       children:
-        clients_tab:
+        workunit_create: ~
+        clients_tab: ~
+        users: ~
+        calendar_tab:
           children:
-            clients: ~
-        activities_tab:
+            table_calendar: ~
+            calendar: ~
+        category_tab:
           children:
+            workunit_list: ~
             registration: ~
             project: ~
             court: ~
@@ -107,7 +130,6 @@ oro_menu_config:
             month_report: ~
             hourly_report: ~
             project_report: ~
-        table_calendar: ~
         system_tab:
           children:
             users_management:
